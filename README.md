@@ -139,10 +139,25 @@ API Key 只通过本地 `.env` 或环境变量注入，不写入源码和 Git。
 
 ```bash
 cd G:\ai-agent-show\voiceshop-ai
-python -m app.web
+py -3.11 -m pip install -r requirements.txt
+py -3.11 -m app.web
 ```
 
 Open `http://127.0.0.1:7860`.
+
+## Agent runtime
+
+The runtime is implemented as a compiled LangGraph state machine. The main nodes are
+session loading, model-first intent classification, schema validation, slot extraction,
+catalog retrieval, RAG retrieval, response generation, and trace persistence. `run_agent`
+is retained as a compatibility adapter for the HTTP and evaluation entry points; it is
+not the workflow implementation.
+
+Model calls use versioned prompts under `app/prompts/`, Pydantic validation, optional
+function-calling contracts, retry-after-aware retries, primary/fallback model switching,
+and model-call records containing latency, token usage, model, prompt version, and cost.
+Intent results use a semantic cache keyed by the model, prompt context, and query. Redis
+is used when configured; local memory is available for development.
 
 ## LLM configuration
 

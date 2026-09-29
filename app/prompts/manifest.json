@@ -1,0 +1,4 @@
+{
+  "intent": {"active": "v1", "available": ["v1"]},
+  "answer": {"active": "v1", "available": ["v1"]}
+}

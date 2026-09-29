@@ -1,28 +1,17 @@
-"""Trace, audit and evaluation contracts. Pseudocode only."""
+"""Application-level observability adapters."""
 
-def record_span(trace_id, node, started_at, ended_at, input_data, output_data, status):
-    trace_repo.insert({
-        "trace_id": trace_id,
-        "node": node,
-        "started_at": started_at,
-        "ended_at": ended_at,
-        "input": redact_sensitive_fields(input_data),
-        "output": redact_sensitive_fields(output_data),
-        "status": status,
-    })
+from __future__ import annotations
+
+from typing import Any
+
+from . import db
 
 
-def evaluate_case(case, agent_version):
-    result = run_case(case, agent_version)
-    return {
-        "intent_correct": result.intent == case.expected_intent,
-        "slot_f1": slot_f1(result.slots, case.expected_slots),
-        "tool_correct": tool_match(result.tool_trace, case.expected_tools),
-        "task_completed": task_completed(result, case),
-    }
+def record_span(trace_id: str, node: str, started_at: float, ended_at: float, input_data: Any, output_data: Any, status: str) -> None:
+    db.save_trace(trace_id, "system", [{"node": node, "started_at": started_at, "ended_at": ended_at, "input": input_data, "output": output_data, "status": status}])
 
 
-def regression_check(current, baseline):
-    if current["task_completed"] < baseline["task_completed"] - 0.03:
+def regression_check(current: dict[str, float], baseline: dict[str, float], threshold: float = 0.03) -> str:
+    if current.get("task_completed", 0) < baseline.get("task_completed", 0) - threshold:
         return "REGRESSION"
     return "PASS"

@@ -27,6 +27,7 @@ def init_db() -> None:
         CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, order_no TEXT UNIQUE, user_id INTEGER, session_id TEXT, product_id INTEGER, quantity INTEGER, status TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP);
         CREATE TABLE IF NOT EXISTS faqs (id INTEGER PRIMARY KEY AUTOINCREMENT, question TEXT, answer TEXT, category TEXT);
         CREATE TABLE IF NOT EXISTS traces (id INTEGER PRIMARY KEY AUTOINCREMENT, trace_id TEXT, session_id TEXT, payload_json TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP);
+        CREATE TABLE IF NOT EXISTS model_calls (id INTEGER PRIMARY KEY AUTOINCREMENT, trace_id TEXT, node TEXT, model TEXT, prompt_version TEXT, latency_ms REAL, input_tokens INTEGER, output_tokens INTEGER, total_tokens INTEGER, estimated_cost REAL, status TEXT, error_type TEXT, fallback INTEGER DEFAULT 0, created_at TEXT DEFAULT CURRENT_TIMESTAMP);
         INSERT OR IGNORE INTO users(id, nickname) VALUES (1, 'Demo 用户');
         INSERT OR IGNORE INTO faqs(id, question, answer, category) VALUES (1, '怎么退货', '请在收货后七天内提交售后申请，商品需保持完好。', '售后');
         INSERT OR IGNORE INTO faqs(id, question, answer, category) VALUES (2, '多久发货', '现货商品通常会在一个工作日内发出。', '物流');
@@ -95,6 +96,21 @@ def delete_session(session_id: str, user_id: int = 1) -> bool:
 def save_trace(trace_id: str, session_id: str, trace: list[dict[str, Any]]) -> None:
     with connect() as conn:
         conn.execute("INSERT INTO traces(trace_id, session_id, payload_json) VALUES (?, ?, ?)", (trace_id, session_id, json.dumps(trace, ensure_ascii=False)))
+
+
+def record_model_call(record: dict[str, Any]) -> None:
+    with connect() as conn:
+        conn.execute(
+            """INSERT INTO model_calls(
+                trace_id, node, model, prompt_version, latency_ms, input_tokens,
+                output_tokens, total_tokens, estimated_cost, status, error_type, fallback
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            tuple(record.get(key) for key in (
+                "trace_id", "node", "model", "prompt_version", "latency_ms",
+                "input_tokens", "output_tokens", "total_tokens", "estimated_cost",
+                "status", "error_type", "fallback",
+            )),
+        )
 
 
 def record_behavior(user_id: int, product_id: int, event: str) -> None:
