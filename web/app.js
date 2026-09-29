@@ -28,6 +28,8 @@ const detailDescription = document.querySelector("#detailDescription");
 const detailPrice = document.querySelector("#detailPrice");
 const detailOrderButton = document.querySelector("#detailOrderButton");
 const orderList = document.querySelector("#orderList");
+const sessionList = document.querySelector("#sessionList");
+const newSessionButton = document.querySelector("#newSessionButton");
 
 let latestResponse = "";
 let allProducts = [];
@@ -35,6 +37,8 @@ let activeCategory = "全部";
 let sessionId = window.localStorage.getItem("voiceshop_session_id") || null;
 let recognition = null;
 let isListening = false;
+let autoVoiceEnabled = window.localStorage.getItem("voiceshop_auto_voice") !== "off";
+let progressTimer = null;
 
 const slotLabels = { category: "商品类别", budget_max: "预算上限", usage_scene: "使用场景", brand_preference: "品牌偏好", must_have: "核心偏好", avoid: "规避条件" };
 const metricLabels = { total_cases: "评测样本", slot_f1: "Slot-F1", recall_at_5: "Recall@5", clarification_accuracy: "澄清准确率" };
@@ -44,6 +48,76 @@ function switchView(viewName) {
   document.querySelectorAll(".nav-item").forEach((item) => item.classList.toggle("active", item.dataset.view === viewName));
   history.replaceState(null, "", `#${viewName}`);
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function escapeHtml(value = "") {
+  return String(value).replace(/[&<>\"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" })[character]);
+}
+
+function clearConversation() {
+  conversationMessages.querySelectorAll(".history-message").forEach((message) => message.remove());
+  latestResponse = "";
+  answerTitle.textContent = "等待你的需求";
+  answerText.textContent = "";
+  renderSlots({});
+  renderRecommendations([]);
+  traceCount.textContent = "0";
+  traceId.textContent = "trace pending";
+  traceList.innerHTML = "";
+}
+
+function renderSessionList(sessions = []) {
+  if (!sessions.length) {
+    sessionList.innerHTML = "<p class='session-empty'>还没有历史会话</p>";
+    return;
+  }
+  sessionList.innerHTML = sessions.map((session) => {
+    const title = (session.title || "新对话").trim().slice(0, 28);
+    const active = session.id === sessionId ? " active" : "";
+    return `<div class="session-row"><button class="session-item${active}" type="button" data-session-id="${session.id}"><strong>${escapeHtml(title)}</strong><small>${session.message_count} 条消息</small></button><button class="session-delete" type="button" data-session-delete="${session.id}" aria-label="删除会话" title="删除会话">×</button></div>`;
+  }).join("");
+}
+
+async function loadSessions() {
+  const data = await (await fetch("/api/sessions")).json();
+  renderSessionList(data.sessions || []);
+  if (sessionId && !data.sessions.some((session) => session.id === sessionId)) {
+    sessionId = null;
+    window.localStorage.removeItem("voiceshop_session_id");
+  }
+}
+
+async function loadSessionHistory(targetSessionId) {
+  const response = await fetch(`/api/sessions/${encodeURIComponent(targetSessionId)}`);
+  if (!response.ok) throw new Error("历史会话加载失败");
+  const data = await response.json();
+  sessionId = targetSessionId;
+  window.localStorage.setItem("voiceshop_session_id", sessionId);
+  clearConversation();
+  (data.messages || []).forEach((message) => {
+    appendConversationMessage(message.role === "USER" ? "user-chat" : "assistant-chat", message.content);
+    if (message.role === "ASSISTANT") latestResponse = message.content;
+  });
+  renderSlots(data.session?.slots || {});
+  answerTitle.textContent = "历史会话";
+  await loadSessions();
+}
+
+async function deleteSession(targetSessionId) {
+  const confirmed = window.confirm("删除后将无法恢复这段会话，确定删除吗？");
+  if (!confirmed) return;
+  const response = await fetch("/api/sessions/delete", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ session_id: targetSessionId }) });
+  if (!response.ok) throw new Error("历史会话删除失败");
+  if (targetSessionId === sessionId) startNewSession();
+  await loadSessions();
+}
+
+function startNewSession() {
+  sessionId = null;
+  window.localStorage.removeItem("voiceshop_session_id");
+  queryInput.value = "";
+  clearConversation();
+  loadSessions();
 }
 
 function formatValue(value) {
@@ -74,18 +148,22 @@ function renderSlots(slots = {}) {
 function buildReason(item, slots = {}) {
   const reasons = [];
   if (slots.budget_max && item.price <= slots.budget_max) reasons.push(`价格 ${item.price} 元，在预算内`);
-  if (slots.usage_scene && (item.scene_tags || []).includes(slots.usage_scene)) reasons.push("使用场景匹配");
+  const sceneLabels = { running: "适合跑步训练", commute: "适合日常通勤", noise_cancel: "适合通勤和办公", business: "适合正式场景" };
+  if (slots.usage_scene && (item.scene_tags || []).includes(slots.usage_scene)) reasons.push(sceneLabels[slots.usage_scene] || "使用场景匹配");
   const matched = (slots.must_have || []).filter((tag) => (item.feature_tags || []).includes(tag));
-  if (matched.length) reasons.push(`命中${matched.join("、")}偏好`);
-  if (item.stock > 0) reasons.push("当前有库存");
-  return reasons.length ? reasons.join(" · ") : "综合匹配度较高，适合作为候选商品";
+  const featureLabels = { light: "轻量设计，适合长时间行走", cushion: "缓震配置，脚感更舒适", stable: "稳定支撑，适合需要控制足部晃动的用户", battery: "续航表现更适合长时间使用", noise_cancel: "具备降噪能力，适合嘈杂环境", durable: "耐用性较好，适合日常长期使用" };
+  matched.forEach((tag) => reasons.push(featureLabels[tag] || `具备${tag}功能`));
+  if (slots.brand_preference && item.brand.toLowerCase() === slots.brand_preference.toLowerCase()) reasons.push(`符合 ${item.brand} 品牌偏好`);
+  if (reasons.length < 2 && item.stock > 0) reasons.push("当前有库存，可及时下单");
+  return reasons.length ? reasons.slice(0, 2).join(" · ") : "商品信息与当前需求整体匹配";
 }
 
 function productCard(item, mode = "catalog", slots = {}) {
   const score = item.score ? `<span class="score">匹配度 ${Number(item.score).toFixed(2)}</span>` : "";
   const reason = mode === "recommendation" ? `<p class="reason">推荐理由：${buildReason(item, slots)}</p>` : "";
+  const visual = item.image ? `<img class="product-image" src="${item.image}" alt="${item.name}">` : `<div class="product-visual ${visualClass(item.category)}"></div>`;
   return `<article class="${mode === "catalog" ? "catalog-card" : "product-card"}">
-    <div class="visual"><div class="product-visual ${visualClass(item.category)}"></div></div>
+    <div class="visual">${visual}</div>
     <div>${score}<h3>${item.name}</h3></div>
     <div class="price-line"><span class="price">${item.price} 元</span><span class="stock">库存 ${item.stock}</span></div>
     <div class="meta"><span>${item.brand}</span><span>${item.category}</span>${(item.scene_tags || []).slice(0, 2).map((tag) => `<span>${tag}</span>`).join("")}</div>
@@ -135,16 +213,61 @@ async function deleteOrder(orderNo) {
   await loadOrders();
 }
 
+function normalizeRecommendationCategory(category = "") {
+  if (["鞋子", "鞋", "运动鞋", "跑步鞋", "跑鞋"].includes(category)) return "跑鞋";
+  if (["耳机", "蓝牙耳机", "降噪耳机"].includes(category)) return "耳机";
+  if (["手表", "腕表"].includes(category)) return "手表";
+  return category;
+}
+
 function renderRecommendations(items = [], slots = {}) {
-  candidateCount.textContent = items.length;
-  recommendationCount.textContent = items.length ? `${items.length} 件推荐` : "尚未筛选";
-  if (!items.length) {
+  const category = normalizeRecommendationCategory(slots.category || "");
+  const visibleItems = category ? items.filter((item) => item.category === category) : items;
+  candidateCount.textContent = visibleItems.length;
+  recommendationCount.textContent = visibleItems.length ? `${visibleItems.length} 件推荐` : "尚未筛选";
+  if (!visibleItems.length) {
     recommendationList.className = "recommendation-list empty";
     recommendationList.textContent = "你的推荐商品会显示在这里";
     return;
   }
   recommendationList.className = "recommendation-list";
-  recommendationList.innerHTML = items.map((item) => productCard(item, "recommendation", slots)).join("");
+  recommendationList.innerHTML = visibleItems.map((item) => productCard(item, "recommendation", slots)).join("");
+}
+
+function startAgentProgress(query) {
+  const knowledgeQuery = ["退货", "退款", "换货", "售后", "发货", "物流", "保修", "怎么寄回", "多久"].some((keyword) => query.includes(keyword));
+  const stages = knowledgeQuery ? [
+    ["正在识别用户问题", "判断问题类型与处理方向"],
+    ["正在检索知识库", "匹配售后、物流与服务资料"],
+    ["正在核对相关依据", "整理可引用的知识内容"],
+    ["正在总结，为您提供相关解答", "生成最终回复"]
+  ] : [
+    ["正在识别用户问题", "理解商品类别与购买意图"],
+    ["正在整理购物偏好", "提取预算、场景和功能需求"],
+    ["正在检索商品", "筛选符合条件的候选商品"],
+    ["正在比较匹配度", "综合预算、场景与商品特征"],
+    ["正在总结，为您提供相关解答", "生成推荐理由"]
+  ];
+  let stageIndex = 0;
+  const showStage = () => {
+    const [title, detail] = stages[stageIndex];
+    answerTitle.textContent = title;
+    recommendationCount.textContent = `处理中 · ${stageIndex + 1}/${stages.length}`;
+    recommendationList.className = "recommendation-list progress-state";
+    recommendationList.innerHTML = `<div class="progress-message"><span class="progress-spinner"></span><div><strong>${title}</strong><small>${detail}</small></div></div>`;
+  };
+  showStage();
+  progressTimer = window.setInterval(() => {
+    if (stageIndex < stages.length - 1) {
+      stageIndex += 1;
+      showStage();
+    }
+  }, 650);
+}
+
+function stopAgentProgress() {
+  if (progressTimer) window.clearInterval(progressTimer);
+  progressTimer = null;
 }
 
 function summarizeTraceStep(step) {
@@ -175,7 +298,7 @@ function renderResult(result) {
 
 function appendConversationMessage(className, text, thinking = false) {
   const message = document.createElement("div");
-  message.className = `message ${className}`;
+  message.className = `message history-message ${className}`;
   if (thinking) {
     message.innerHTML = `${text}<span class="thinking-dots" aria-hidden="true"><i></i><i></i><i></i></span>`;
   } else {
@@ -206,9 +329,7 @@ async function runAgent() {
   answerText.classList.add("is-hidden");
   thinkingText.classList.remove("is-hidden");
   thinkingText.classList.add("is-hidden");
-  answerTitle.textContent = "Agent 正在分析";
-  recommendationCount.textContent = "分析中";
-  renderRecommendations([]);
+  startAgentProgress(query);
   const startedAt = Date.now();
   try {
     const responsePromise = fetch("/api/recommend", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query, session_id: sessionId }) });
@@ -222,13 +343,17 @@ async function runAgent() {
     answerText.classList.remove("is-hidden");
     thinkingMessage.remove();
     answerText.classList.add("is-hidden");
+    stopAgentProgress();
     appendConversationMessage("assistant-chat", result.response || "没有返回内容");
     renderResult(result);
+    if (autoVoiceEnabled) speakText(result.response || "没有返回内容");
+    await loadSessions();
   } catch (error) {
     thinkingText.classList.add("is-hidden");
     answerText.classList.remove("is-hidden");
     thinkingMessage.remove();
     answerText.classList.add("is-hidden");
+    stopAgentProgress();
     appendConversationMessage("assistant-chat", error.message);
     answerTitle.textContent = "暂时无法完成筛选";
     answerText.textContent = error.message;
@@ -239,13 +364,36 @@ async function runAgent() {
   }
 }
 
-function speakLatestResponse() {
-  if (!latestResponse) return;
-  if (!("speechSynthesis" in window)) return;
+function updateVoiceButton() {
+  speakButton.textContent = autoVoiceEnabled ? "语音回复：开" : "语音回复：关";
+  speakButton.setAttribute("aria-pressed", String(autoVoiceEnabled));
+  speakButton.title = autoVoiceEnabled ? "关闭自动语音回复" : "开启自动语音回复";
+}
+
+function speakText(text) {
+  if (!text || !("speechSynthesis" in window)) {
+    setVoiceStatus("当前浏览器不支持语音合成，请使用文字回复");
+    return;
+  }
   window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(latestResponse);
+  const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "zh-CN";
+  utterance.rate = 1;
+  utterance.pitch = 1;
   window.speechSynthesis.speak(utterance);
+}
+
+function speakLatestResponse() {
+  speakText(latestResponse);
+}
+
+function toggleAutoVoice() {
+  autoVoiceEnabled = !autoVoiceEnabled;
+  window.localStorage.setItem("voiceshop_auto_voice", autoVoiceEnabled ? "on" : "off");
+  updateVoiceButton();
+  if (!autoVoiceEnabled && "speechSynthesis" in window) window.speechSynthesis.cancel();
+  setVoiceStatus(autoVoiceEnabled ? "自动语音回复已开启" : "自动语音回复已关闭");
+  if (autoVoiceEnabled) speakLatestResponse();
 }
 
 function setVoiceStatus(message) {
@@ -320,6 +468,13 @@ document.querySelectorAll("[data-category]").forEach((button) => button.addEvent
   renderCatalog();
 }));
 document.addEventListener("click", (event) => {
+  const deleteSessionButton = event.target.closest("[data-session-delete]");
+  if (deleteSessionButton) {
+    deleteSession(deleteSessionButton.dataset.sessionDelete).catch((error) => setVoiceStatus(error.message));
+    return;
+  }
+  const sessionButton = event.target.closest("[data-session-id]");
+  if (sessionButton) loadSessionHistory(sessionButton.dataset.sessionId).catch((error) => { setVoiceStatus(error.message); });
   const detailClose = event.target.closest("[data-detail-close]");
   if (detailClose || event.target === productDetail) productDetail.classList.add("is-hidden");
   const detailButton = event.target.closest("[data-product-view]");
@@ -335,13 +490,18 @@ document.addEventListener("keydown", (event) => {
 detailOrderButton.addEventListener("click", () => createOrder(detailOrderButton.dataset.productId));
 
 runButton.addEventListener("click", runAgent);
-speakButton.addEventListener("click", speakLatestResponse);
+newSessionButton.addEventListener("click", startNewSession);
+speakButton.addEventListener("click", toggleAutoVoice);
 micButton.addEventListener("click", toggleVoiceInput);
 evalButton.addEventListener("click", refreshEval);
 queryInput.addEventListener("keydown", (event) => { if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) runAgent(); });
 
 const initialView = window.location.hash.slice(1);
 if (["dialogue", "catalog", "scenes", "orders"].includes(initialView)) switchView(initialView);
+updateVoiceButton();
 loadCatalog();
 loadOrders();
 refreshEval();
+loadSessions().then(() => {
+  if (sessionId) loadSessionHistory(sessionId).catch(() => startNewSession());
+});

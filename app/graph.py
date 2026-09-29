@@ -11,6 +11,8 @@ from . import db, llm, rag, tools
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
+MODEL_CONFIDENCE_THRESHOLD = 0.65
+SUPPORTED_CATEGORIES = {"跑鞋", "耳机", "手表", "口红"}
 
 
 def load_products() -> list[dict[str, Any]]:
@@ -54,6 +56,65 @@ def extract_slots(text: str) -> dict[str, Any]:
         if any(keyword in query for keyword in keywords):
             slots["must_have"].append(feature)
     return slots
+
+
+def normalize_category(value: Any) -> str | None:
+    if not value:
+        return None
+    category = str(value).strip()
+    aliases = {
+        "鞋": "跑鞋",
+        "鞋子": "跑鞋",
+        "运动鞋": "跑鞋",
+        "跑步鞋": "跑鞋",
+        "耳机": "耳机",
+        "蓝牙耳机": "耳机",
+        "降噪耳机": "耳机",
+        "手表": "手表",
+        "腕表": "手表",
+        "口红": "口红",
+    }
+    return aliases.get(category, category)
+
+
+def slots_from_model(model_intent: dict[str, Any] | None) -> dict[str, Any]:
+    entities = (model_intent or {}).get("entities") or {}
+    slots = empty_slots()
+    slots["category"] = normalize_category(entities.get("category"))
+    budget = entities.get("budget_max")
+    if budget not in (None, ""):
+        try:
+            slots["budget_max"] = int(budget)
+        except (TypeError, ValueError):
+            pass
+    for key in ("usage_scene", "brand_preference"):
+        if entities.get(key):
+            slots[key] = entities[key]
+    must_have = entities.get("must_have") or []
+    slots["must_have"] = [must_have] if isinstance(must_have, str) else list(must_have)
+    return slots
+
+
+def unsupported_category(model_intent: dict[str, Any] | None) -> str | None:
+    entities = (model_intent or {}).get("entities") or {}
+    raw_category = entities.get("requested_category") or entities.get("category")
+    if not raw_category:
+        return None
+    normalized = normalize_category(raw_category)
+    return str(raw_category) if normalized not in SUPPORTED_CATEGORIES else None
+
+
+def select_intent(model_intent: dict[str, Any] | None, text: str) -> tuple[str, str, str | None]:
+    if model_intent:
+        try:
+            confidence = float(model_intent.get("confidence", 0))
+        except (TypeError, ValueError):
+            confidence = 0
+        intent = model_intent.get("intent")
+        if intent and confidence >= MODEL_CONFIDENCE_THRESHOLD:
+            return str(intent), "llm", None
+        return fallback_intent(text), "rules_fallback", "low_confidence"
+    return fallback_intent(text), "rules_fallback", "model_unavailable"
 
 
 def merge_slots(previous: dict[str, Any], current: dict[str, Any]) -> dict[str, Any]:
@@ -136,7 +197,7 @@ def fallback_intent(text: str) -> str:
         return "product_price_query"
     if any(keyword in text for keyword in ["不想要", "不要", "换一种", "排除", "别推荐"]):
         return "change_preference"
-    if any(keyword in text for keyword in ["有没有", "是否有", "想要", "想买"]):
+    if any(keyword in text for keyword in ["有没有", "是否有", "有吗", "有无"]):
         return "product_availability_query"
     if is_knowledge_query(text):
         return "knowledge_query"
@@ -167,11 +228,18 @@ def run_agent(user_input: str, session_id: str | None = None, user_id: int = 1) 
     history_context = db.recent_messages(session_id, 6)
     model_context = json.dumps({"phase": session.get("phase"), "slots": session.get("slots", {}), "recent_messages": history_context}, ensure_ascii=False)
     model_intent = llm.classify_intent(user_input, model_context) if llm.configured() else None
-    llm_used = bool(llm.configured())
-    intent = str((model_intent or {}).get("intent") or fallback_intent(user_input))
-    if intent == "change_preference" and not any(word in user_input for word in ["不想要", "不要", "排除", "别推荐", "换成", "换一种"]):
-        intent = "product_availability_query"
-    trace.append({"node": "intent_classification", "label": "主要意图识别", "engine": "llm" if model_intent else "rules_fallback", "intent": intent, "confidence": (model_intent or {}).get("confidence")})
+    intent, intent_engine, fallback_reason = select_intent(model_intent, user_input)
+    model_slots = slots_from_model(model_intent) if intent_engine == "llm" else empty_slots()
+    llm_used = bool(model_intent)
+    trace.append({"node": "intent_classification", "label": "主要意图识别", "engine": intent_engine, "intent": intent, "confidence": (model_intent or {}).get("confidence"), "fallback_reason": fallback_reason})
+    unknown_category = unsupported_category(model_intent) if intent_engine == "llm" else None
+    if unknown_category and intent in {"product_recommendation", "product_availability_query", "product_compare", "product_detail_query"}:
+        response = f"当前商品库暂不支持{unknown_category}，目前可以帮你挑选跑鞋、耳机、手表或口红。"
+        trace.append({"node": "catalog_validation", "label": "商品类别校验", "category": unknown_category, "status": "unsupported"})
+        db.append_message(session_id, "ASSISTANT", response)
+        trace.append({"node": "audit_persist", "label": "Trace 审计入库", "trace_id": trace_id})
+        db.save_trace(trace_id, session_id, trace)
+        return {"trace_id": trace_id, "session_id": session_id, "status": "clarify", "slots": session.get("slots", {}), "response": response, "recommendations": [], "trace": trace, "llm_configured": llm.configured(), "llm_used": llm_used}
     if intent == "order_history_query":
         orders = tools.list_order_history(user_id)
         if orders:
@@ -192,21 +260,29 @@ def run_agent(user_input: str, session_id: str | None = None, user_id: int = 1) 
         db.save_trace(trace_id, session_id, trace)
         return {"trace_id": trace_id, "session_id": session_id, "status": "answered", "slots": session.get("slots", {}), "response": response, "recommendations": [], "trace": trace, "llm_configured": llm.configured(), "llm_used": llm_used}
     if intent == "product_availability_query":
-        entities = (model_intent or {}).get("entities") or {}
-        category = entities.get("category")
-        catalog = tools.search_products(category=category, query=user_input)
+        current_slots = merge_slots(extract_slots(user_input), model_slots)
+        previous_slots = session.get("slots", {})
+        category = current_slots.get("category") or previous_slots.get("category")
+        budget_max = current_slots.get("budget_max") or previous_slots.get("budget_max")
+        catalog = tools.search_products(category=category)
+        if budget_max is not None:
+            catalog = [item for item in catalog if item["price"] <= budget_max]
         trace.append({"node": "tool_call", "label": "调用商品目录工具", "tool": "search_products", "category": category, "result_count": len(catalog)})
         if catalog:
             names = "、".join(item["name"] for item in catalog[:5])
-            response = f"目前商品库中有：{names}。如果你告诉我预算和使用场景，我可以继续帮你筛选。"
+            if budget_max is not None:
+                response = f"有符合 {budget_max} 元预算的{category or '商品'}：{names}。如果你告诉我使用场景，我可以继续帮你筛选。"
+            else:
+                response = f"目前商品库中有：{names}。如果你告诉我预算和使用场景，我可以继续帮你筛选。"
             status = "clarify"
         else:
-            response = f"当前商品库暂时没有收录{category or '这类'}商品。你可以换一个商品类别，或者告诉我是否需要查看现有商品。"
+            budget_text = f" {budget_max} 元以内" if budget_max is not None else ""
+            response = f"当前商品库暂时没有{category or '符合条件的'}{budget_text}商品。你可以放宽预算，或者换一个商品类别。"
             status = "clarify"
         db.append_message(session_id, "ASSISTANT", response)
         trace.append({"node": "audit_persist", "label": "Trace 审计入库", "trace_id": trace_id})
         db.save_trace(trace_id, session_id, trace)
-        return {"trace_id": trace_id, "session_id": session_id, "status": status, "slots": session.get("slots", {}), "response": response, "recommendations": catalog[:5], "trace": trace, "llm_configured": llm.configured(), "llm_used": llm_used}
+        return {"trace_id": trace_id, "session_id": session_id, "status": status, "slots": merge_slots(previous_slots, current_slots), "response": response, "recommendations": catalog[:5], "trace": trace, "llm_configured": llm.configured(), "llm_used": llm_used}
     emotion = "frustrated" if any(word in user_input for word in ["着急", "生气", "不满意", "太慢"]) else "neutral"
     trace.append({"node": "emotion_detect", "label": "情绪识别", "emotion": emotion})
     if intent in {"knowledge_query", "after_sales_query", "logistics_query"} or (intent == "unknown" and is_knowledge_query(user_input)):
@@ -228,8 +304,9 @@ def run_agent(user_input: str, session_id: str | None = None, user_id: int = 1) 
         trace.append({"node": "audit_persist", "label": "Trace 审计入库", "trace_id": trace_id})
         db.save_trace(trace_id, session_id, trace)
         return {"trace_id": trace_id, "session_id": session_id, "status": "answered", "slots": session.get("slots", {}), "response": response, "recommendations": [], "trace": trace, "llm_configured": llm.configured(), "llm_used": llm_used, "sources": [item["source"] for item in retrieved]}
-    current = extract_slots(user_input)
-    trace.append({"node": "extract_slots", "label": "规则槽位抽取", "slots": current, "engine": "rules"})
+    rule_slots = extract_slots(user_input)
+    current = merge_slots(rule_slots, model_slots)
+    trace.append({"node": "extract_slots", "label": "规则槽位抽取与模型实体合并", "slots": current, "engine": "rules_plus_llm_entities" if intent_engine == "llm" else "rules"})
     if intent == "change_preference":
         excluded_category = current.get("category") or session.get("slots", {}).get("category")
         updated_slots = empty_slots()
@@ -245,20 +322,21 @@ def run_agent(user_input: str, session_id: str | None = None, user_id: int = 1) 
     previous_slots = session.get("slots", {})
     previous_phase = session.get("phase", "INTENT")
     continuation = is_recommendation_follow_up(user_input)
-    starts_new_request = previous_phase == "RECOMMEND" and bool(current.get("category")) and not continuation
-    unrelated_after_recommendation = previous_phase == "RECOMMEND" and not any(current.get(key) for key in ["category", "budget_max", "usage_scene", "must_have"]) and not continuation
-    if starts_new_request or unrelated_after_recommendation:
-        merged = merge_slots({}, current)
+    is_contextual_follow_up = continuation or is_price_query(user_input) or intent == "product_availability_query"
+    starts_new_request = bool(rule_slots.get("category")) and not continuation and previous_phase == "RECOMMEND"
+    unrelated_new_request = intent in {"product_recommendation", "product_compare", "product_detail_query"} and not any(current.get(key) for key in ["category", "budget_max", "usage_scene", "must_have"]) and not is_contextual_follow_up
+    if starts_new_request or unrelated_new_request:
+        merged = merge_slots({}, rule_slots if starts_new_request else current)
         trace.append({"node": "session_boundary", "label": "识别新的购物需求", "previous_phase": previous_phase})
     else:
         merged = merge_slots(previous_slots, current)
     needs_model_help = not merged.get("category")
     if needs_model_help and llm.configured():
-        llm_used = True
-        model_slots = llm.extract_slots(user_input)
-        trace.append({"node": "llm_slot_fallback", "label": "大模型补充理解", "engine": "llm", "slot_extracted": bool(model_slots)})
-        if model_slots:
-            merged = merge_slots(merged, model_slots)
+        extracted_slots = llm.extract_slots(user_input)
+        llm_used = llm_used or bool(extracted_slots)
+        trace.append({"node": "llm_slot_fallback", "label": "大模型补充理解", "engine": "llm", "slot_extracted": bool(extracted_slots)})
+        if extracted_slots:
+            merged = merge_slots(merged, extracted_slots)
     if "休闲鞋" in user_input:
         merged["category"] = None
         response = "当前商品库暂未收录休闲鞋，现有鞋类主要是跑鞋。你可以选择跑鞋，或者告诉我是否需要补充其他鞋类。"

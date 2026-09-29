@@ -12,7 +12,7 @@ VoiceShop AI 面向在线购物中的自然语言导购场景。用户可以通�
 
 VoiceShop 提供面向用户的 AI 语音导购入口，支持多轮需求表达、商品推荐理由展示、语音输入和商品目录浏览。
 
-![VoiceShop AI 对话首页](docs/images/voiceshop-dialogue.png)
+![VoiceShop AI 商品目录](docs/images/voiceshop-dialogue.png)
 
 ## 核心能力
 

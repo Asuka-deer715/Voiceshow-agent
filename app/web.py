@@ -28,6 +28,15 @@ class VoiceShopHandler(BaseHTTPRequestHandler):
         if path == "/api/products":
             self.send_json({"products": load_products()})
             return
+        if path == "/api/sessions":
+            user_id = int(parse_qs(parsed.query).get("user_id", [1])[0])
+            self.send_json({"sessions": db.list_sessions(user_id)})
+            return
+        if path.startswith("/api/sessions/"):
+            session_id = path.rsplit("/", 1)[-1]
+            session = db.get_session(session_id)
+            self.send_json({"session": session, "messages": db.list_messages(session_id)})
+            return
         if path.startswith("/api/products/"):
             product_id = int(path.rsplit("/", 1)[-1])
             item = next((product for product in load_products() if product["id"] == product_id), None)
@@ -82,6 +91,10 @@ class VoiceShopHandler(BaseHTTPRequestHandler):
                 return
             if parsed.path == "/api/orders/delete":
                 deleted = db.delete_order(str(payload["order_no"]), int(payload.get("user_id", 1)))
+                self.send_json({"deleted": deleted})
+                return
+            if parsed.path == "/api/sessions/delete":
+                deleted = db.delete_session(str(payload["session_id"]), int(payload.get("user_id", 1)))
                 self.send_json({"deleted": deleted})
                 return
             self.send_error(404, "Not Found")

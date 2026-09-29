@@ -51,12 +51,45 @@ def save_session(session_id: str, slots: dict[str, Any], phase: str) -> None:
 def append_message(session_id: str, role: str, content: str) -> None:
     with connect() as conn:
         conn.execute("INSERT INTO messages(session_id, role, content) VALUES (?, ?, ?)", (session_id, role, content))
+        conn.execute("UPDATE sessions SET updated_at = CURRENT_TIMESTAMP WHERE id = ?", (session_id,))
 
 
 def recent_messages(session_id: str, limit: int = 6) -> list[dict[str, Any]]:
     with connect() as conn:
         rows = conn.execute("SELECT role, content, created_at FROM messages WHERE session_id = ? ORDER BY id DESC LIMIT ?", (session_id, limit)).fetchall()
         return [dict(row) for row in reversed(rows)]
+
+
+def list_sessions(user_id: int = 1) -> list[dict[str, Any]]:
+    with connect() as conn:
+        rows = conn.execute("""
+            SELECT sessions.id, sessions.phase, sessions.updated_at,
+                   (SELECT content FROM messages WHERE session_id = sessions.id AND role = 'USER' ORDER BY id LIMIT 1) AS title,
+                   (SELECT COUNT(*) FROM messages WHERE session_id = sessions.id) AS message_count
+            FROM sessions
+            WHERE sessions.user_id = ?
+              AND EXISTS (SELECT 1 FROM messages WHERE session_id = sessions.id)
+            ORDER BY datetime(sessions.updated_at) DESC
+            LIMIT 50
+        """, (user_id,)).fetchall()
+        return [dict(row) for row in rows]
+
+
+def list_messages(session_id: str) -> list[dict[str, Any]]:
+    with connect() as conn:
+        rows = conn.execute("SELECT role, content, created_at FROM messages WHERE session_id = ? ORDER BY id", (session_id,)).fetchall()
+        return [dict(row) for row in rows]
+
+
+def delete_session(session_id: str, user_id: int = 1) -> bool:
+    with connect() as conn:
+        exists = conn.execute("SELECT 1 FROM sessions WHERE id = ? AND user_id = ?", (session_id, user_id)).fetchone()
+        if not exists:
+            return False
+        conn.execute("DELETE FROM traces WHERE session_id = ?", (session_id,))
+        conn.execute("DELETE FROM messages WHERE session_id = ?", (session_id,))
+        conn.execute("DELETE FROM sessions WHERE id = ? AND user_id = ?", (session_id, user_id))
+        return True
 
 
 def save_trace(trace_id: str, session_id: str, trace: list[dict[str, Any]]) -> None:
