@@ -1,0 +1,1002 @@
+[
+  {
+    "input": "I got to add an item to the cart",
+    "expected_intent": "add_product",
+    "source_category": "CART",
+    "tags": "BL",
+    "reference_response": "I'll get right on it! I'm here to assist you in adding an item to your cart. Here's a step-by-step guide to help you out:\n\n1. Browse through our {{Product Catalog}} to find the item you want to add to your cart.\n2. Once you've found the item, click on the \"{{Add to Cart}}\" button or select the desired quantity from the available options.\n3. You'll be redirected to your cart page, where you can review your selected items.\n4. If you want to continue shopping, simply click on the \"{{Continue Shopping}}\" button, and you'll be taken back to the catalog.\n5. If you're ready to proceed, click on the \"{{Checkout}}\" button to finalize your purchase.\n\nIf you encounter any difficulties during this process, please don't hesitate to let me know. I'm here to help you with any questions or concerns you may have. Happy shopping!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "wanna add fucking products to the basket can huelp me",
+    "expected_intent": "add_product",
+    "source_category": "CART",
+    "tags": "BCIMQWZ",
+    "reference_response": "I sincerely apologize if you've encountered any frustration with your previous experience. I'm here to assist you with adding products to your basket. Let's get started!\n\nTo add products to your basket, follow these simple steps:\n\n1. Browse through our website/catalog to find the products you'd like to add.\n2. Once you've found a product you want, click on the \"{{Add to Basket}}\" button or icon.\n3. The product will be added to your basket automatically, usually indicated by a mini shopping cart icon.\n4. Continue browsing and adding more products if needed.\n5. When you're ready to complete your purchase, click on the \"{{Checkout}}\" or \"{{Proceed to Checkout}}\" button.\n\nIf you encounter any issues while adding products to your basket or have any questions along the way, don't hesitate to reach out. I'm here to help make your shopping experience as smooth as possible!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i have to add products to the basket i ned help",
+    "expected_intent": "add_product",
+    "source_category": "CART",
+    "tags": "BCMQZ",
+    "reference_response": "You bet! I'm here to assist you in adding products to your basket. Let me guide you through the process step by step:\n\n1. Start by browsing our website and finding the products you wish to add to your basket.\n\n2. Once you find a product you like, click on the \"Add to Basket\" button or a similar option. This will add the product to your virtual basket.\n\n3. Continue browsing and adding more products to your basket by following the same process for each item.\n\n4. If you want to make any changes to the quantity of a product in your basket, you can easily update it by adjusting the quantity before proceeding.\n\n5. When you're ready to complete your purchase, click on the basket or cart icon, usually located at the top right corner of the page. This will take you to a summary of all the products in your basket.\n\n6. Review the items in your basket to make sure everything looks correct. You can also remove any unwanted items at this stage.\n\n7. Once you're satisfied with your selection, click on the \"Checkout\" or \"Proceed to Checkout\" button to proceed with the purchase.\n\nIf you encounter any difficulties or have any questions along the way, feel free to reach out. Happy shopping!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "di like to add products to the cart could i get some help",
+    "expected_intent": "add_product",
+    "source_category": "CART",
+    "tags": "BCILMPQZ",
+    "reference_response": "Indeed! I'm here to assist you in adding products to your cart. Let me guide you through the process:\n\n1. Browse through our website and explore the wide range of products we offer.\n2. Once you find a product you like, click on the \"Add to Cart\" button.\n3. If you wish to continue shopping, simply repeat the process for other items.\n4. To view your cart and proceed to checkout when you're finished, click on the shopping cart icon at the top right corner of the website.\n5. Review the items in your cart and make any necessary adjustments.\n6. When you're ready, click on the \"Checkout\" button to finalize your purchase.\n\nIf you encounter any issues or need further assistance, feel free to ask. Happy shopping!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I need to add an item to the cart , where do I do it?",
+    "expected_intent": "add_product",
+    "source_category": "CART",
+    "tags": "BCILZ",
+    "reference_response": "I'll take care of it! I'm here to help you with adding items to your cart. To do that, simply follow these steps:\n\n1. Browse through our wide range of products and find the item you wish to add to your cart.\n2. Once you've found the item, click on the \"Add to Cart\" button or icon next to it.\n3. You will then be redirected to your shopping cart or given a pop-up notification confirming that the item has been added.\n4. If you want to continue shopping, you can repeat the process for additional items. Otherwise, proceed to the checkout page to complete your purchase.\n\nIf you encounter any difficulties or need further assistance, feel free to let me know. I'm here to make your shopping experience as smooth as possible!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i got to see the availability of an item i need assixtance",
+    "expected_intent": "availability",
+    "source_category": "PRODUCT",
+    "tags": "BCLQZ",
+    "reference_response": "Our team regrets and is sorry for any inconvenience you may have experienced. I'll be glad to assist you with checking the availability of the item you're interested in. To provide you with accurate information, could you please provide me with the name or description of the item? Once I have that, I'll be able to help you determine its availability and provide you with the details you need.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I want to see the fuckking item availability, can you help me?",
+    "expected_intent": "availability",
+    "source_category": "PRODUCT",
+    "tags": "BCILWZ",
+    "reference_response": "I genuinely apologize for any frustration caused by the language used in your previous message. I'm here to assist you with checking the availability of the item you're interested in. \n\nTo provide you with the most accurate information, I will need a few details. Could you please provide me with the name or description of the item you're looking for? Once I have this information, I will promptly check its availability for you.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "when will this item be available?",
+    "expected_intent": "availability",
+    "source_category": "PRODUCT",
+    "tags": "BI",
+    "reference_response": "Thank you for your interest in our product! I understand that you'd like to know when the item will be available. To provide you with accurate information, could you please provide me with the name or item number of the product? Once I have that, I'll be more than happy to check the availability and give you an estimated time of when it will be back in stock.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I would like to see the availability of an item, how can I do it?",
+    "expected_intent": "availability",
+    "source_category": "PRODUCT",
+    "tags": "BCILP",
+    "reference_response": "I appreciate your interest in checking the availability of an item. Allow me to assist you with that. To determine the availability of a product, you can follow these steps:\n\n1. Visit our website or online store.\n2. Use the search bar or browse through the relevant categories to find the item you're interested in.\n3. Click on the product to view its details and specifications.\n4. Look for the \"Availability\" or \"In Stock\" information on the product page. This will indicate if the item is currently available for purchase.\n5. If you need additional information or have any specific questions regarding the availability of the item, feel free to reach out to our customer support team who will be happy to assist you further.\n\nPlease note that availability may vary based on location and product demand. If the item shows as out of stock, you may also have the option to sign up for notifications when it becomes available again.\n\nIf you have any further queries or require any other information, please don't hesitate to let me know. I'm here to help!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I got to ceck item availability, can I get some help?",
+    "expected_intent": "availability",
+    "source_category": "PRODUCT",
+    "tags": "BCIZ",
+    "reference_response": "Unquestionably! I'm here to assist you with checking the availability of the item you're interested in. To do that, here are a few steps you can follow:\n\n1. Visit our website or app and navigate to the {{Product Catalog}} or {{Shop}} section.\n2. Use the search bar to find the item you want to check availability for.\n3. Click on the product to view its details.\n4. Look for information such as \"In Stock,\" \"Available,\" or \"Add to Cart\" to confirm if the item is currently available.\n\nIf you can't find the information you need or if there's any confusion, please don't hesitate to reach out to our {{Customer Support Team}}. They will be more than happy to provide you with real-time availability updates or assist you in finding a suitable alternative.\n\nHappy shopping!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I would like to check the availability of a fucking item in store, how could I do it ?",
+    "expected_intent": "availability_in_store",
+    "source_category": "PRODUCT",
+    "tags": "BCILPWZ",
+    "reference_response": "Please know that I'm sorry for the offensive language used in your instruction, and I understand that you would like assistance in checking the availability of items in our store. I'm here to help you with that!\n\nTo check the availability of an item in our store, you have a few options:\n\n1. Visit our website at {{Company Website URL}} and browse our online store. You can use the search function or navigate through the different categories to find the item you're looking for. The item's availability status will be displayed on the product page.\n\n2. If you prefer to speak with someone directly, you can reach our customer support team at {{Customer Support Phone Number}}. They will be able to provide you with real-time information about the availability of the item in our store.\n\n3. If you're near our physical store, you can visit us in person. Our friendly staff will be more than happy to assist you and check the availability of the item you're interested in.\n\nI hope this helps! Let me know if there's anything else I can assist you with.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I need to see the availabilitt of an item in store, could you help me?",
+    "expected_intent": "availability_in_store",
+    "source_category": "PRODUCT",
+    "tags": "BCILPZ",
+    "reference_response": "Sure, I can assist you with that! Finding the availability of an item in-store is quite simple. Here's what you need to do:\n\n1. Visit our {{Store Locator}} on our website or mobile app.\n2. Enter your location or use your current location to find the nearest store.\n3. Once you've selected a store, search for the {{Product Name}} you're interested in.\n4. The system will display the availability status of the item in that particular store.\n5. If the item is available, it will show the quantity in stock. If it's not available, you may want to check other nearby stores or consider ordering online.\n6. If you have any trouble finding the information or need further assistance, feel free to reach out to our customer support team at {{Customer Support Phone Number}} or through the Live Chat on our website at {{Company Website URL}}.\n\nI hope this helps! Let me know if there's anything else I can assist you with.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "can you help me seeing the availability of an item in store?",
+    "expected_intent": "availability_in_store",
+    "source_category": "PRODUCT",
+    "tags": "BIL",
+    "reference_response": "Sure! I'm here to assist you with checking the availability of the item you're interested in. To provide the most accurate information, could you please let me know the name or description of the product? Once I have that, I'll quickly check our inventory and let you know if it's available in store. Feel free to provide any specific details about the item to help me with the search.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i have to see the availability of fucking products in store how do i do it",
+    "expected_intent": "availability_in_store",
+    "source_category": "PRODUCT",
+    "tags": "BCILQW",
+    "reference_response": "I truly apologize for any frustration or inconvenience you may have experienced. I understand that you would like to check the availability of products in our store. Let me help you with that. To view the availability of products, you can follow these steps:\n\n1. Visit our website or mobile app.\n2. Search for the product you are interested in.\n3. On the product page, you will find information about its availability.\n4. If the product is available, you can proceed with the purchase. If it's out of stock, you may want to check back later or explore similar alternatives.\n\nIf you need any further assistance or have any more questions, please feel free to let me know. I'm here to help!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "id like to check the availability of fucking products in store help me",
+    "expected_intent": "availability_in_store",
+    "source_category": "PRODUCT",
+    "tags": "BCPQW",
+    "reference_response": "I sincerely apologize for the inconvenience you've faced while trying to check the availability of products in our store. I'm here to assist you with that. Rest assured, I'll do my best to provide you with the information you need. Can you please let me know the specific products you are interested in? That way, I can check their availability for you and provide an accurate response. Thank you for your patience and understanding while I gather the details.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I'd like to see the availability of a prodcut online i need assistance",
+    "expected_intent": "availability_online",
+    "source_category": "PRODUCT",
+    "tags": "BCLPQZ",
+    "reference_response": "Indeed! I'm here to help you with that. To check the availability of a product online, you can follow these simple steps:\n\n1. Visit our website at {{Company Website URL}}.\n2. Browse through our product catalog or use the search bar to find the specific product you're interested in.\n3. Click on the product to view its details page.\n4. On the product details page, you should be able to see the current availability status. It will usually be indicated as \"In Stock\" or \"Out of Stock\".\n\nIf you're unable to find the availability or have any trouble during the process, please let me know, and I'll be glad to provide further assistance. Happy shopping!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "were to see the availability of products online?",
+    "expected_intent": "availability_online",
+    "source_category": "PRODUCT",
+    "tags": "BILZ",
+    "reference_response": "Indeed! I'm here to help you with that. To check the availability of products online, you can follow these steps:\n\n1. Visit our website at {{Company Website URL}}.\n2. Navigate to the '{{Products}}' or '{{Online Store}}' section.\n3. Use the search bar or browse through the categories to find the product you're interested in.\n4. Click on the product to view its details.\n5. Look for the availability status, which is usually indicated as 'In Stock', 'Out of Stock', or 'Pre-order'.\n6. You can also filter the products based on availability using the options provided on the website.\n\nIf you have any trouble finding the availability information or need further assistance, feel free to let me know. I'm here to make your online shopping experience as seamless as possible!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I want to check the availability of iems online, where do I do it?",
+    "expected_intent": "availability_online",
+    "source_category": "PRODUCT",
+    "tags": "BCILZ",
+    "reference_response": "I'm on it! I'm here to assist you with checking the availability of items online. To do that, you can visit our website at {{Company Website URL}}. Once you're on the website, follow these easy steps:\n\n1. Look for the search bar, usually located at the top of the webpage.\n2. Type in the name or description of the item you're interested in.\n3. Hit enter or click the search button.\n4. You'll be shown a list of search results with the available items.\n5. You can filter the results by category, brand, or any other relevant filters to narrow down your search.\n6. Click on the item you want to check for more details.\n7. On the product page, you'll find information about the availability, such as \"In Stock\" or \"Out of Stock.\"\n\nIf you have any specific item or category in mind, feel free to let me know. I'll be more than happy to provide you with further assistance.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I have to see the availability of  fucking items online, where can I do it?",
+    "expected_intent": "availability_online",
+    "source_category": "PRODUCT",
+    "tags": "BCILWZ",
+    "reference_response": "I'm truly sorry for any frustration you may have encountered. I understand that you would like to check the availability of items online. I'd be happy to assist you with that. To view the availability of items, you can follow these steps:\n\n1. Visit our website at {{Company Website URL}}.\n2. Navigate to the product search or browse option.\n3. Enter the name or description of the item you're interested in.\n4. The search results should display the available items, along with their details and current stock status.\n\nIf you encounter any difficulties or have further questions, feel free to let me know. I'm here to help!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I'd like to checkthe availability of fucking products online",
+    "expected_intent": "availability_online",
+    "source_category": "PRODUCT",
+    "tags": "BPQWZ",
+    "reference_response": "I genuinely apologize for the frustration you've encountered while trying to check the availability of the products online. I'm here to assist you with that.\n\nTo check the availability of the products online, please follow these steps:\n\n1. Visit our website at {{Company Website URL}}.\n2. Browse through the different product categories or use the search bar to find the specific product you're interested in.\n3. Click on the product to view its details page.\n4. On the product details page, you'll find information about its availability.\n5. If the product is available, you'll be able to see a \"Add to Cart\" or \"Buy Now\" button.\n6. If the product is out of stock, it will be indicated on the page, and you may need to check for alternative options or sign up to receive notifications when it becomes available again.\n\nIf you have any further questions or need assistance with the process, feel free to let me know. I'm here to help!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i got to cancel an online order i need assistance",
+    "expected_intent": "cancel_order",
+    "source_category": "ORDER",
+    "tags": "BCLQ",
+    "reference_response": "I'm sorry to hear that you need to cancel your online order. I'm here to assist you with that. To proceed with the cancellation, please provide me with the {{Order Number}} of your purchase. Once I have that information, I'll check the status of your order and guide you through the cancellation process. Rest assured, I'll do my best to make this process as smooth and hassle-free as possible for you.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i have to cancel anm online order will ya help me",
+    "expected_intent": "cancel_order",
+    "source_category": "ORDER",
+    "tags": "BCILPQZ",
+    "reference_response": "I'll get right on it! I'm here to assist you with canceling your online order. I understand that sometimes circumstances change, and you may need to make adjustments to your order. Don't worry, I'll guide you through the process. To cancel your online order, please follow these steps:\n\n1. Log in to your account on our website using your registered email and password.\n2. Go to the \"{{Order History}}\" or \"{{My Orders}}\" section.\n3. Locate the order you wish to cancel and select the cancellation option.\n4. If the cancellation option is not available online, please contact our {{Customer Support Team}} directly, and they will assist you further.\n\nPlease keep in mind that order cancellations may be subject to certain conditions, such as the order status and the time elapsed since the purchase. If you encounter any difficulties or have any questions during the cancellation process, feel free to reach out to our customer support team for immediate assistance. We'll do our best to help you efficiently.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I bought a fucking item but I do not wantt it, how could I cancel the fucking order?",
+    "expected_intent": "cancel_order",
+    "source_category": "ORDER",
+    "tags": "BCEIPWZ",
+    "reference_response": "I'm sorry to hear that you're not satisfied with your recent purchase and would like to cancel the order. I apologize if there have been any inconveniences. I'll do my best to assist you with canceling the order.\n\nTo initiate the cancellation process, I kindly request you to provide me with your order details such as the {{Order Number}} or any other information that can help me locate your order in our system. Once I have the required information, I'll verify it and proceed with canceling the order for you.\n\nPlease bear in mind that the cancellation process may vary depending on the stage of your order and the specific terms and conditions of the purchase. I'll make sure to provide you with all the necessary information and guide you through the process step-by-step.\n\nIf you have any additional questions, concerns, or need further assistance, please feel free to let me know.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I'd like to cancel a product, I needhelp",
+    "expected_intent": "cancel_order",
+    "source_category": "ORDER",
+    "tags": "BCPZ",
+    "reference_response": "I'm sorry to hear that you want to cancel your product. I'll be happy to assist you with that. To cancel your order, please follow these steps:\n\n1. Retrieve your {{Order Number}}. You can find it in the confirmation email or on your order details page.\n2. Contact our customer support team by {{Customer Support Phone Number}} or through the Live Chat on our website at {{Company Website URL}}.\n3. Provide them with your order number and let them know that you would like to cancel your order.\n4. Our team will guide you through the cancellation process and confirm the cancellation for you.\n\nPlease keep in mind that the cancellation policy may vary depending on the product and the specific terms and conditions of the purchase. It's always a good idea to review the cancellation policy mentioned on our website or in the confirmation email.\n\nIf you have any further questions or need assistance with anything else, feel free to let me know.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I'd like to cancel an item, will you help me?",
+    "expected_intent": "cancel_order",
+    "source_category": "ORDER",
+    "tags": "BCILP",
+    "reference_response": "Of course, I'm here to help you with canceling your item. I understand that sometimes circumstances change, and canceling an order becomes necessary. To assist you with this, please follow these steps:\n\n1. Locate your order details. You can find them in the \"{{Order Section}}\" on our website or in the confirmation email we sent you.\n\n2. Identify the item you wish to cancel. Take note of the {{Product Name}} or {{Product ID}}, which will help us process your request more efficiently.\n\n3. Contact our customer support team through our {{Contact Channel}}. They are available {{Customer Support Working Hours}} to assist you. Provide them with your order details and the specific item you would like to cancel.\n\n4. Our dedicated team will take care of your request promptly. They will confirm the cancellation and guide you through any necessary follow-up steps, such as refunds or returns.\n\nIf you have any questions or need further assistance, please don't hesitate to let us know. We want to ensure that your cancellation process is as smooth as possible.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I want to make a change to my fucking account, can you help me?",
+    "expected_intent": "change_account",
+    "source_category": "ACCOUNT",
+    "tags": "BCIW",
+    "reference_response": "I genuinely apologize for the frustration you've experienced while trying to make changes to your account. I'm here to assist you with that. Updating your account information is crucial to ensure your details are accurate and up to date. Here's what you need to do:\n\n1. Log in to your account on our website.\n2. Locate the \"Account Settings\" or \"Profile\" option.\n3. Click on it to access your account details.\n4. Make the necessary changes to your information.\n5. Don't forget to save the changes before exiting.\n\nIf you encounter any issues or have further questions, please feel free to reach out to our customer support team. We're here to help you.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I need to change my account, hw can I do it?",
+    "expected_intent": "change_account",
+    "source_category": "ACCOUNT",
+    "tags": "BCIZ",
+    "reference_response": "I'm on it! I'd be happy to help you with updating your account details. Making changes to your account is a simple process. Here's what you can do:\n\n1. Log in to your account on our website using your {{Username}} and {{Password}}.\n2. Once you're logged in, navigate to the {{Account Settings}} or {{Profile}} section.\n3. In the account settings, you'll find options to update various details such as {{Email Address}}, {{Phone Number}}, {{Shipping Address}}, and more.\n4. Click on the specific field you want to modify and enter the new information.\n5. Don't forget to save your changes before you leave the page.\n\nIf you encounter any difficulties or have any questions while updating your account, feel free to reach out. I'm here to guide you through the process and provide any assistance you may need.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "wanna make a change to my fucking profile i need hepl",
+    "expected_intent": "change_account",
+    "source_category": "ACCOUNT",
+    "tags": "BCLQWZ",
+    "reference_response": "I genuinely apologize for the frustration you've experienced while trying to make changes to your profile. I'm here to assist you with that. Let's get your profile updated and address any concerns you have. Here's what we can do:\n\n1. Head over to your account settings by clicking on your profile picture or username.\n2. Look for the \"Edit Profile\" or \"Account Settings\" option.\n3. Once you're in the editing mode, you can modify the information you want to change, such as your name, email address, or any other details.\n4. Remember to save the changes before you exit.\n\nIf you encounter any issues or need further assistance, please let me know. I'm here to help make the process as smooth as possible.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i have an error in my profile id like to edit it",
+    "expected_intent": "change_account",
+    "source_category": "ACCOUNT",
+    "tags": "BCLPQ",
+    "reference_response": "I'm truly sorry for any inconvenience you've encountered with your profile ID. I'm here to assist you in editing it. Follow these steps to make the necessary changes:\n\n1. Access your account settings or profile page.\n2. Look for the option to edit your profile ID.\n3. Update the information with the correct details.\n4. Be sure to save the changes before exiting.\n\nIf you encounter any difficulties or have further questions, please don't hesitate to reach out. I'm here to help!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i got to edit my user cacount will ya help me",
+    "expected_intent": "change_account",
+    "source_category": "ACCOUNT",
+    "tags": "BCILPQZ",
+    "reference_response": "For sure! I'm here to assist you with updating your user account. Let's get started! \n\nTo edit your user account, please follow these simple steps:\n\n1. Log in to your account using your credentials on our website.\n2. Navigate to the \"Account Settings\" or \"Profile\" section.\n3. Look for the option that allows you to edit your account information.\n4. Update the necessary details, such as your name, email address, or any other information you wish to modify.\n5. Make sure to review the changes before saving them to ensure accuracy.\n6. Once you've made the necessary updates, click on the \"Save\" or \"Update\" button to confirm your changes.\n\nIf you encounter any difficulties or need further assistance, please let me know. I'm here to help make the process as smooth as possible!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i bought an item but i chose an wrong color i have to change my fucking online order",
+    "expected_intent": "change_order",
+    "source_category": "ORDER",
+    "tags": "BCLQWZ",
+    "reference_response": "I apologize for any inconvenience you have experienced with your online order. I understand that you accidentally selected the wrong color for your item. Don't worry, I'm here to assist you in changing your order.\n\nTo make any modifications to your online order, please follow these steps:\n\n1. Access your {{Order Details}} page on our website.\n2. Look for the option to \"{{Edit Order}}\" or \"{{Modify Order}}\".\n3. Select the item that needs to be changed, and choose the correct color.\n4. Review the changes to ensure everything is accurate.\n5. Finally, save the modifications to update your order.\n\nIf you encounter any difficulties or have further questions, please let me know. I'll be more than happy to help you throughout the process.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "need to modify my fucking order before usend it can i get some help",
+    "expected_intent": "change_order",
+    "source_category": "ORDER",
+    "tags": "BCILQW",
+    "reference_response": "I sincerely apologize for any frustration or inconvenience you may have experienced with your order. I'm here to assist you in modifying your order before it is sent out. Let's get it sorted together! Here are the steps you can take to make the necessary changes:\n\n1. Log in to your account on our website using your {{Email Address}} and password.\n2. Navigate to the \"{{Order Section}}\" or \"{{Order History}}\" page.\n3. Locate the order you wish to modify and click on it to access the details.\n4. Look for an \"{{Edit Order}}\" or \"{{Modify Order}}\" option and click on it.\n5. You should now be able to make the desired modifications to your order, such as changing the items, quantities, or shipping address.\n6. Once you've made the necessary changes, review them carefully to ensure everything is correct.\n7. Finally, proceed to confirm the modifications and complete the process.\n\nIf you encounter any difficulties or have specific questions about modifying your order, don't hesitate to reach out. Our dedicated customer support team is available to provide further assistance and ensure your order is exactly as you want it. Thank you for your understanding, and we appreciate your patience!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i purchased a product but i chose a wrong model i got to update my fucking online order",
+    "expected_intent": "change_order",
+    "source_category": "ORDER",
+    "tags": "BCLQW",
+    "reference_response": "I sincerely apologize for any inconvenience you've experienced with your recent purchase and the choice of the wrong model. Rest assured, we'll do everything we can to assist you. Updating your online order is a straightforward process. Here's what you need to do:\n\n1. Visit our website and log in to your account.\n2. Navigate to the \"{{Order Section}}\" or \"{{Order History}}\" section.\n3. Locate your order with the incorrect model and select the \"{{Edit Order}}\" option.\n4. Follow the prompts to update your order details and choose the correct model.\n5. Don't forget to review and save your changes before proceeding.\n6. If you encounter any issues during the process, feel free to reach out to our customer support team at {{Customer Support Phone Number}} or through our live chat on the website.\n\nThank you for bringing this to our attention, and we appreciate your understanding. We're here to help make things right for you.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i purchased a fucking product but i chose a wrong color could i modify my online order",
+    "expected_intent": "change_order",
+    "source_category": "ORDER",
+    "tags": "BCILPQW",
+    "reference_response": "I sincerely apologize for any frustration caused by the incorrect color choice in your online order. I'm here to help you modify your order and get the right color. Here's what you can do:\n\n1. First, log in to your {{Account}} on our website.\n2. Navigate to your {{Order History}} or {{My Orders}} section.\n3. Locate the specific order that you want to modify.\n4. Look for an option like \"{{Modify Order}}\" or \"{{Edit Order}}.\"\n5. Click on that option and follow the prompts to select the correct color for your product.\n6. Make sure to review your changes before submitting them.\n7. If you encounter any difficulties or need further assistance, please don't hesitate to reach out to our customer support team. They are available {{Customer Support Working Hours}} at {{Customer Support Phone Number}} or through the Live Chat on our website at {{Company Website URL}}.\n\nThank you for bringing this to our attention, and we appreciate your understanding as we work to resolve this for you.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i purchased a product but i chose a wrong model can i update my fucking order",
+    "expected_intent": "change_order",
+    "source_category": "ORDER",
+    "tags": "BCILQW",
+    "reference_response": "I'm genuinely sorry for any inconvenience caused by your order with the wrong model. I understand how frustrating it can be to receive the wrong product. Let's get this sorted out for you. Here's what you can do to update your order:\n\n1. Reach out to our {{Customer Support Team}} at {{Customer Support Phone Number}} or via {{Live Chat}} on our website.\n2. Provide them with your {{Order Number}} and explain the situation, mentioning that you accidentally selected the wrong model.\n3. Our team will assist you in updating your order with the correct model and guide you through any necessary steps or additional charges, if applicable.\n\nRest assured, we're here to make things right for you. If you have any further questions or concerns, feel free to let me know.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i got to deleete my user account where can i do it",
+    "expected_intent": "close_account",
+    "source_category": "ACCOUNT",
+    "tags": "BCILQZ",
+    "reference_response": "I've realized that you wish to delete your user account. I apologize for any inconvenience this may cause you. Deleting your account is a straightforward process. Here's what you need to do:\n\n1. Login to your account on our website or app.\n2. Navigate to the \"{{Account Settings}}\" or \"{{Profile}}\" section.\n3. Look for the option or link to delete your account.\n4. Follow the instructions provided to confirm the deletion.\n\nIf you're unable to locate the account deletion option, please reach out to our customer support team at {{Customer Support Phone Number}} or through the Live Chat on our website. They will be more than happy to assist you further with deleting your account.\n\nPlease note that deleting your account will result in the permanent removal of your personal information from our systems, and you will no longer have access to your account and any associated benefits or services.\n\nIf there's anything else I can help you with, please let me know.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I have to cancel my fucking user account, where do I do it?",
+    "expected_intent": "close_account",
+    "source_category": "ACCOUNT",
+    "tags": "BCILW",
+    "reference_response": "I apologize for the frustration you've experienced with your user account. I understand that you would like to cancel your account, and I'm here to assist you. \n\nTo cancel your account, please follow these steps:\n\n1. Go to your account settings on our website. You can usually find it by clicking on your profile icon or username.\n2. Look for the \"Account\" or \"Profile\" section within the settings.\n3. In the account/profile section, you should find an option for \"Cancel Account\" or \"Delete Account.\"\n4. Click on that option and follow any prompts or instructions provided.\n5. If you're unable to find the \"Cancel Account\" or \"Delete Account\" option, please reach out to our customer support team for further assistance. They will be able to guide you through the process.\n\nPlease note that canceling your user account will result in the permanent deletion of your account and all associated data. Make sure to back up any important information before proceeding.\n\nIf you have any further questions or need additional assistance, feel free to let me know.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i do not need my fucking account I'd like to cancel it",
+    "expected_intent": "close_account",
+    "source_category": "ACCOUNT",
+    "tags": "BCELPQW",
+    "reference_response": "It's regrettable, and I'm sorry for any frustration or inconvenience you may have experienced with your account. I understand that you would like to cancel it. I'm here to assist you with that. \n\nTo proceed with the account cancellation, please follow these steps:\n\n1. Log in to your account on our website.\n2. Navigate to the account settings or profile section.\n3. Look for the option to cancel or deactivate your account.\n4. Follow the prompts or instructions provided to complete the cancellation process.\n\nIf you encounter any difficulties or have further questions during the process, please don't hesitate to let me know. I'm here to help you through it.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i dont need my fucking user account can ya cancel it",
+    "expected_intent": "close_account",
+    "source_category": "ACCOUNT",
+    "tags": "BCILQW",
+    "reference_response": "We acknowledge the issue, and we're sorry for any frustration or inconvenience you may have experienced with your user account. I understand that you would like to cancel it. I'll be happy to assist you with that. To proceed with the account cancellation, please provide me with your {{Email Address}} or {{Username}} associated with the account. Once I have that information, I'll initiate the cancellation process for you. Thank you for your cooperation, and I'm here to help with any further assistance you may need.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I do not need my account, can you help me cancelling it?",
+    "expected_intent": "close_account",
+    "source_category": "ACCOUNT",
+    "tags": "BCEIL",
+    "reference_response": "I'll make it happen! I understand that you no longer need your account and would like to cancel it. I apologize for any inconvenience this may cause. To proceed with the account cancellation, please follow the steps below:\n\n1. Log in to your account on our website or app.\n2. Navigate to the account settings or profile section.\n3. Look for the \"Close Account\" or \"Delete Account\" option.\n4. Follow the prompts and confirm your decision to cancel the account.\n5. If there are any outstanding issues, such as pending orders or subscriptions, make sure to resolve them beforehand.\n\nPlease note that cancelling your account will result in the permanent deletion of your data and the inability to access any associated services or benefits. If you have any concerns or difficulties during the process, feel free to reach out to our customer support team at {{Customer Support Phone Number}} or through live chat on our website. We'll be more than happy to assist you further.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i have to speak with fucking clieent service where to do it",
+    "expected_intent": "customer_service",
+    "source_category": "CONTACT",
+    "tags": "BCILQWZ",
+    "reference_response": "Our apologies for any frustration you may be experiencing. I completely understand your need to speak with our customer service team. Rest assured, I'm here to guide you in the right direction. To reach our customer service department, please follow these steps:\n\n1. Visit our official website at {{Company Website URL}}.\n2. Look for the \"Contact Us\" or \"Support\" section on the website.\n3. In that section, you'll find various contact options such as phone numbers, email addresses, or a live chat feature.\n4. Choose the contact method that suits you best, and click on it to get in touch with our customer service representatives.\n\nThey will be more than happy to assist you with your concerns and provide the support you need. If you have any further questions or need additional assistance, feel free to reach out to me.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I got to call customer support, how do I do ti?",
+    "expected_intent": "customer_service",
+    "source_category": "CONTACT",
+    "tags": "BCILZ",
+    "reference_response": "Sure, I can help you with that! If you need to call our customer support, here's what you can do:\n\n1. Dial our dedicated customer support helpline at {{Customer Support Phone Number}}.\n2. Listen carefully to the automated menu options and select the appropriate one for your concern. For example, you might be prompted to press 1 for general inquiries, 2 for technical support, or 3 for billing inquiries.\n3. Once you've selected the relevant option, you'll be connected to one of our knowledgeable customer support representatives who will gladly assist you further.\n\nIf you prefer an alternative method, we also offer {{Live Chat Support}} on our website where you can chat with a representative in real-time. Simply visit our website at {{Company Website URL}} and look for the chat icon in the corner of the screen.\n\nWe understand that waiting on hold can be frustrating, so we appreciate your patience. If you have any difficulties or need further assistance, feel free to let me know.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "what is the customer service no?",
+    "expected_intent": "customer_service",
+    "source_category": "CONTACT",
+    "tags": "BIZ",
+    "reference_response": "Of course, I can assist you with that! Our customer service team is ready to help you. You can reach them by dialing {{Customer Service Phone Number}}. They are available {{Customer Service Working Hours}}. Don't hesitate to give them a call if you have any questions or need assistance.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I got to speak with fucking customer support, where can I do it?",
+    "expected_intent": "customer_service",
+    "source_category": "CONTACT",
+    "tags": "BCILW",
+    "reference_response": "I'm sincerely sorry for any frustration you may be experiencing. I'm here to assist you in reaching our customer service. To speak with our customer support team, you have a few options:\n\n1. You can reach out to our {{Customer Support Phone Number}}. Our dedicated representatives will be happy to help you with any questions or concerns you may have.\n\n2. If you prefer written communication, you can send an email to {{Customer Support Email}}. Make sure to include all the necessary details so that we can address your inquiry effectively.\n\n3. We also offer a Live Chat option on our website at {{Company Website URL}}. Simply click on the chat widget, and one of our agents will be available to assist you in real-time.\n\nWhichever method you choose, we're here to provide you with the support you need. Feel free to reach out whenever it's convenient for you.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "wanna speak with fucking customer service how to do it",
+    "expected_intent": "customer_service",
+    "source_category": "CONTACT",
+    "tags": "BCILQW",
+    "reference_response": "Please accept my apologies for any frustration you may have experienced while trying to reach our customer service team. I understand the importance of speaking with a representative to address your concerns. Allow me to guide you through the process:\n\n1. You can reach our customer service team by calling our {{Customer Support Phone Number}}. Our dedicated agents are available {{Customer Support Working Hours}} to assist you.\n\n2. If you prefer written communication, you can send an email to {{Customer Support Email Address}}. Our team will respond to your inquiry as soon as possible.\n\n3. Another option is to visit our website at {{Company Website URL}} and access the Live Chat feature. Simply click on the chat icon and a customer service representative will be there to assist you.\n\n4. If you're using social media platforms, you can also reach out to us through our official {{Social Media Platform}} account. Our social media team is trained to handle customer inquiries and provide timely assistance.\n\nRest assured, our customer service team is dedicated to resolving any issues or concerns you may have. We appreciate your patience, and we look forward to helping you.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "one of the items I bought wzs damaged in shipping, can you help me to report it?",
+    "expected_intent": "damaged_delivery",
+    "source_category": "DELIVERY",
+    "tags": "BCILZ",
+    "reference_response": "I'm sorry to hear that one of the items you purchased arrived damaged. I understand how frustrating that can be. I'll be happy to help you report it. Please provide me with the following details:\n\n1. {{Order Number}}: Could you please provide the order number for the damaged item? This will help us locate your purchase quickly.\n\n2. {{Product Name}}: Kindly specify the name or description of the damaged item. This will assist us in identifying the product accurately.\n\n3. {{Description of Damage}}: Please describe the damage to the item in detail. If possible, provide any relevant information or observations about the packaging or condition of the package upon receipt.\n\nOnce you provide me with these details, I'll take immediate action to report the issue on your behalf and assist you further.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "could ya help me reporting an fucking damaged package",
+    "expected_intent": "damaged_delivery",
+    "source_category": "DELIVERY",
+    "tags": "BIPQWZ",
+    "reference_response": "I'm sorry to hear about the condition of the package you received. I apologize for any inconvenience caused. Don't worry, I'm here to assist you in reporting the damaged package. To ensure that the issue is addressed promptly, please follow these steps:\n\n1. Take clear photos of the damaged package from different angles, including any visible external signs of damage.\n2. Retain the original packaging, labels, and any other relevant materials.\n3. Contact our customer support team either through our website or by phone, preferably using the contact details provided in your order confirmation email.\n4. Provide them with the necessary information such as your {{Order Number}}, the description of the damage, and the attached photos.\n5. Our team will investigate the issue and guide you on the next steps, including potential compensation or replacement options.\n\nPlease accept my apologies for any inconvenience caused. We appreciate your patience and cooperation. If you have any further questions or concerns, please don't hesitate to reach out.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "the fucking package i received was damaged could uhelp me reporting it",
+    "expected_intent": "damaged_delivery",
+    "source_category": "DELIVERY",
+    "tags": "BCIPQW",
+    "reference_response": "I sincerely apologize for the inconvenience caused by the damaged package you received. I understand how frustrating it can be to receive a damaged item. I'm here to help you report this issue and resolve it as quickly as possible.\n\nTo report the damaged package, please follow these steps:\n\n1. Take pictures of the damaged package and the contents inside, if applicable. This will help us assess the extent of the damage.\n\n2. Contact our customer support team at {{Customer Support Phone Number}} or through our website's live chat. Provide them with the details of your order, including the {{Order Number}}, and explain the situation. They will guide you through the next steps.\n\n3. If required, our customer support team may initiate a return or exchange process for the damaged item. They will provide you with the necessary instructions to complete the process smoothly.\n\nRest assured, we take damaged packages seriously, and we will work diligently to resolve this issue for you. Thank you for bringing this to our attention, and we appreciate your patience.\n\nIf you have any further questions or need assistance with anything else, please feel free to let me know.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "how do I report ufcking crushed items?",
+    "expected_intent": "damaged_delivery",
+    "source_category": "DELIVERY",
+    "tags": "BILMWZ",
+    "reference_response": "I'm sorry to hear about the condition of your items upon delivery. I apologize for any inconvenience caused. I'll do my best to assist you in reporting the crushed items. Here's what you can do:\n\n1. Take pictures: Ensure you document the damaged items with clear and detailed photos. This will help expedite the resolution process.\n\n2. Contact customer support: Reach out to our dedicated customer support team to report the crushed items. You can contact them through {{Customer Support Phone Number}} or {{Live Chat}} on our website.\n\n3. Provide details: When contacting customer support, make sure to provide them with relevant information such as your {{Order Number}}, the specific items that were damaged, and the order details.\n\n4. Explain the situation: When speaking with customer support, explain the situation and provide any additional information that may help in resolving the issue promptly.\n\nOur goal is to ensure your satisfaction, and we will work with you to resolve this matter as quickly as possible. Let me know if there's anything else I can assist you with.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "one of the items i got was fucking damaged can uhelp me to report it",
+    "expected_intent": "damaged_delivery",
+    "source_category": "DELIVERY",
+    "tags": "BCILQW",
+    "reference_response": "I'm genuinely sorry to hear that one of the items you received was damaged. I'll do everything I can to assist you in reporting it. To report a damaged item, please follow these steps:\n\n1. Take clear photos of the damaged item(s) from different angles. This will help us assess the extent of the damage.\n2. Visit our website and go to the \"{{Customer Support}}\" section.\n3. Look for the \"{{Report Damaged Item}}\" option or something similar. Click on it.\n4. Provide the required information, such as your {{Order Number}}, {{Item Name}}, and a brief description of the damage.\n5. Upload the photos you took earlier when prompted.\n6. Submit the form, and our dedicated team will review your report and get back to you as soon as possible.\n\nIf you encounter any issues during the process or have any additional questions, please don't hesitate to reach out. We're here to help make things right for you!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I have a fucking problem with my package, I need assistance reporting it",
+    "expected_intent": "delivery_issue",
+    "source_category": "DELIVERY",
+    "tags": "BCLW",
+    "reference_response": "I sincerely apologize for the inconvenience you've faced with your package. I understand how frustrating it can be. Let's take care of this for you. To report the issue, please follow these steps:\n\n1. First, visit our {{Customer Support}} page on our website.\n2. Look for the \"Report Delivery Issue\" option or something similar.\n3. Fill out the necessary details about your package, such as the {{Order Number}}, {{Tracking Number}}, and a brief description of the problem.\n4. Submit the form or send it directly to our customer support team.\n\nPlease rest assured that we will investigate the matter and work towards a resolution as quickly as possible. If you have any further questions or need additional assistance, feel free to let me know. We're here to help you!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I did not receive my shipment, can you help me report a fucking delivery issue?",
+    "expected_intent": "delivery_issue",
+    "source_category": "DELIVERY",
+    "tags": "BCEILW",
+    "reference_response": "I'm truly sorry to hear that you've encountered an issue with the delivery of your shipment. I understand how frustrating that can be. Let's work together to resolve this promptly. To report the delivery issue, please follow these steps:\n\n1. First, please provide me with your {{Order Number}} so that I can investigate the details.\n2. I will escalate the matter to our support team immediately, who will investigate the issue and take necessary action.\n3. In the meantime, please ensure that the delivery address provided during the order process is correct and accessible.\n4. If you have any additional information or specific concerns about the delivery, please feel free to share them with me. Your input will help us resolve the issue efficiently.\n\nRest assured, we treat such matters with the utmost importance, and we'll do our best to make things right for you. Thank you for your patience and cooperation.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "my delivery was sent to the wrong address can ya help  me report fucking delivery issues",
+    "expected_intent": "delivery_issue",
+    "source_category": "DELIVERY",
+    "tags": "BCIMQWZ",
+    "reference_response": "I'm truly sorry for any inconvenience you've experienced with your package delivery. I understand how frustrating it can be when your delivery is sent to the wrong address. Rest assured, I'm here to help you report the issue and resolve it as quickly as possible.\n\nTo report the incorrect delivery address, please provide me with the following details:\n1. Your {{Order Number}}: This will help me locate your order in our system.\n2. The correct delivery address: Please provide the accurate address where you want the package to be delivered.\n3. Any additional information: If there are any specific instructions or details regarding the incorrect address, please let me know.\n\nOnce I have these details, I will initiate the process of resolving the delivery issue and ensure that your package reaches the correct destination. Thank you for your patience, and I apologize again for any inconvenience caused.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "my delivery was late, I want help reporting a delivery issue",
+    "expected_intent": "delivery_issue",
+    "source_category": "DELIVERY",
+    "tags": "BC",
+    "reference_response": "I understand how frustrating it can be when your delivery doesn't arrive on time. I'm here to assist you in reporting the issue and getting it resolved. To begin the process, could you please provide me with your {{Order Number}}? Once I have that, I'll be able to investigate the status of your delivery and take the necessary steps to address the problem. Rest assured, we'll do our best to resolve this issue and ensure a smooth delivery experience for you.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "my delivery was not on time, I need assistance reporting a delivery issue",
+    "expected_intent": "delivery_issue",
+    "source_category": "DELIVERY",
+    "tags": "BCE",
+    "reference_response": "I'm sorry to hear that your delivery was not on time. I understand how frustrating this can be. Rest assured, I'm here to assist you in reporting the delivery issue. To better assist you, could you please provide me with your {{Order Number}}? Once I have that information, I will investigate the issue and work towards a resolution as quickly as possible. Thank you for your patience, and I apologize for any inconvenience caused by the delay in receiving your delivery.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "id like to see the delivery date of my purcnase help me",
+    "expected_intent": "delivery_time",
+    "source_category": "DELIVERY",
+    "tags": "BCLPQZ",
+    "reference_response": "For sure! I'll be happy to assist you with checking the delivery date of your purchase. To provide you with accurate information, I'll need a few details. Could you please provide me with your {{Order Number}}? With that, I'll be able to track your order and provide you with the most up-to-date delivery date. Thank you!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I'd like to see the delivery time where can i do it",
+    "expected_intent": "delivery_time",
+    "source_category": "DELIVERY",
+    "tags": "BCILPQ",
+    "reference_response": "Sure! I'd be more than happy to assist you in checking the delivery time of your purchase. To find the delivery time, you can follow these steps:\n\n1. First, log in to your account on our website.\n2. Navigate to the \"{{Order Details}}\" or \"{{Order History}}\" section.\n3. Locate the specific order for which you want to check the delivery time.\n4. Click on the order to view the details.\n5. Look for the estimated delivery date or delivery status, which should provide you with the information you need.\n\nIf you're unable to find the delivery time or have any difficulties, please don't hesitate to let me know. I'm here to help!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "information about the delivery time",
+    "expected_intent": "delivery_time",
+    "source_category": "DELIVERY",
+    "tags": "B",
+    "reference_response": "I'm happy to help! I'd be happy to provide you with information about the estimated delivery time for your order. To assist you accurately, could you please provide me with your {{Order Number}}? Once I have that, I can quickly look up the details and share the estimated delivery time with you.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I am looking for information about the delivery date of my purchase, how cn I find it?",
+    "expected_intent": "delivery_time",
+    "source_category": "DELIVERY",
+    "tags": "BCEILZ",
+    "reference_response": "Of course! I'd be happy to assist you with finding out the delivery date of your purchase. To get this information, you can follow these steps:\n\n1. Please log in to your account on our website or app.\n2. Navigate to the '{{Order History}}' or '{{My Orders}}' section.\n3. Look for the specific order you want to check the delivery date for.\n4. Click on the order details to view all the relevant information.\n5. On the order details page, you should find the estimated delivery date and any available tracking information.\n\nIf you can't find the exact delivery date or have any trouble along the way, don't hesitate to let me know. I'm here to help!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "id like to know about the fucking delivery time can ya give me somr information",
+    "expected_intent": "delivery_time",
+    "source_category": "DELIVERY",
+    "tags": "BCIPQWZ",
+    "reference_response": "I'm sorry if you're frustrated, and I apologize for any inconvenience caused. I'll be glad to help you with the delivery time of your order. Can you please provide me with your order number? With that information, I can check the current status and estimated delivery date for you.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I'd like to exchange a fucking product i bought where to do it",
+    "expected_intent": "exchange_product",
+    "source_category": "PRODUCT",
+    "tags": "BCIPQW",
+    "reference_response": "I sincerely apologize for the inconvenience you've faced with your purchase. I understand that you would like to exchange a product you bought. Don't worry, I'm here to assist you with that. To initiate the exchange process, please follow these steps:\n\n1. Visit our website at {{Company Website URL}}.\n2. Log in to your account using your credentials.\n3. Navigate to the \"My Orders\" or \"Order History\" section.\n4. Locate the order that includes the product you want to exchange.\n5. Click on the \"Exchange\" or \"Return/Exchange\" option next to the respective product.\n6. Follow the provided instructions to select the reason for the exchange and any additional details.\n7. Choose the replacement product or specify the desired size, color, or variant, if applicable.\n8. Submit the exchange request.\n\nOnce your request is submitted, our customer support team will review it and provide further instructions. If you encounter any difficulties during the process or have any questions, please don't hesitate to reach out to our {{Customer Support Channel}}. We're available {{Customer Support Working Hours}} to assist you.\n\nThank you for your understanding, and we appreciate your patience as we work to resolve this for you.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I got to exchange the fucking orders I purchased , how to do it?",
+    "expected_intent": "exchange_product",
+    "source_category": "PRODUCT",
+    "tags": "BCILMWZ",
+    "reference_response": "I genuinely apologize for the frustration you have faced with your recent purchase. I understand that you want to exchange the orders you purchased. I'm here to help you with that process. To initiate an exchange, please follow these steps:\n\n1. Visit our website and navigate to the \"{{Exchange & Returns}}\" section.\n2. Select the option for \"Exchange\" and click on it.\n3. Provide the necessary information, such as your purchase details, order number, and reason for exchange.\n4. Look for available options to exchange the products you bought.\n5. Choose the new items you would like to receive in exchange.\n6. Follow the instructions for returning the original products to us.\n7. Once we receive your return and verify its condition, we will proceed with shipping the replacement items to you.\n\nIf you have any specific questions or encounter any difficulties during the exchange process, please don't hesitate to reach out to our {{Customer Support Team}}. They are available {{Customer Support Working Hours}} at {{Customer Support Phone Number}} or through the Live Chat on our website at {{Company Website URL}}.\n\nThank you for your understanding and patience. We appreciate your business and will do our best to ensure a smooth exchange experience for you.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I have to exchangd the items I bought, where do I do it?",
+    "expected_intent": "exchange_product",
+    "source_category": "PRODUCT",
+    "tags": "BCILMZ",
+    "reference_response": "I'm on it! I'm here to assist you with exchanging the items you purchased. Don't worry, I'll guide you through the process. To initiate the exchange, please follow these simple steps:\n\n1. Start by visiting our {{Company Website}}.\n2. Navigate to your account or profile settings.\n3. Look for the \"Orders\" section or a similar option.\n4. Locate the specific order containing the items you wish to exchange.\n5. Click on the order to view its details.\n6. Find the \"Exchange\" or \"Return\" option and select it.\n7. Follow the provided instructions to complete the exchange request.\n8. If you encounter any issues or need further assistance, feel free to contact our friendly customer support team. They are available during {{Customer Support Working Hours}} at {{Customer Support Phone Number}} or through the Live Chat feature on our website.\n\nWe appreciate your understanding and cooperation throughout the exchange process. If you have any additional questions or concerns, please don't hesitate to let me know.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I'd like to exchange the fucking products I bought, where can I do it?",
+    "expected_intent": "exchange_product",
+    "source_category": "PRODUCT",
+    "tags": "BCIMPW",
+    "reference_response": "We recognize the inconvenience and apologize for any inconvenience you've experienced with your recent purchase. I understand the frustration you're feeling and I'm here to guide you through the exchange process. To facilitate an exchange, you have a couple of options:\n\n1. Visit our website and navigate to the \"{{Exchange & Returns}}\" section. There, you'll find information on how to initiate an exchange, along with any specific instructions or requirements.\n\n2. Alternatively, if you provide me with the {{Order Number}} of your purchase, I can personally assist you with the exchange process. Just let me know the details, and I'll do my best to make it as seamless as possible.\n\nRemember, our goal is to ensure your satisfaction with your purchase, so don't hesitate to reach out if you have any further questions or concerns.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i got to exchange a fucking product i bought where  to do it",
+    "expected_intent": "exchange_product",
+    "source_category": "PRODUCT",
+    "tags": "BCIQWZ",
+    "reference_response": "I'm attuned to the idea that you're looking to exchange a product you purchased. I apologize for any inconvenience caused and I'm here to assist you. To initiate the exchange process, please follow these steps:\n\n1. Visit our website at {{Company Website URL}}.\n2. Log in to your account or navigate to the \"My Account\" section.\n3. Locate your order history or recent purchases.\n4. Look for the specific product you wish to exchange.\n5. Select the \"Exchange\" or \"Return\" option beside the product.\n6. Follow the prompts to initiate the exchange request.\n7. If you encounter any difficulties or have any questions, please reach out to our customer support team for further assistance.\n\nWe appreciate your patience and understanding throughout this process. Let me know if there's anything else I can help you with!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I'd like to exchange a fucking item i purchased online in store will ya help me",
+    "expected_intent": "exchange_product_in_store",
+    "source_category": "PRODUCT",
+    "tags": "BCILPQW",
+    "reference_response": "I sincerely apologize for any frustration or inconvenience you've experienced with your online purchase. I'd be glad to assist you with exchanging the item in-store. Here's what you need to do:\n\n1. Please bring the item you purchased online and a copy of the order confirmation or receipt to the nearest store location.\n2. Head to the customer service desk, and the store staff will be happy to assist you with the exchange process.\n3. They will check the item's condition and availability and help you find a suitable replacement.\n4. If there's a price difference between the exchanged items, they will guide you through the payment or refund process.\n5. Once the exchange is complete, you'll be on your way with the new item!\n\nIf you have any specific questions or need further assistance, feel free to let me know. We're here to make your shopping experience as smooth as possible!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I have to exchange a fucking item in store , how can I do it?",
+    "expected_intent": "exchange_product_in_store",
+    "source_category": "PRODUCT",
+    "tags": "BCILWZ",
+    "reference_response": "We're accountable for, and we apologize for any inconvenience you have experienced with the item you want to exchange. I'm here to assist you with the exchange process at our store. Here's what you need to do:\n\n1. Locate the nearest {{Store Location}} by visiting our website or contacting our customer support.\n2. Bring the item you wish to exchange along with the original receipt or proof of purchase.\n3. Approach the customer service desk or any available staff member at the store.\n4. Explain the situation and provide them with the necessary details, such as the reason for the exchange.\n5. Our team will assess the item to ensure it meets the exchange criteria, such as being in its original condition.\n6. Once the exchange is approved, you can select a new item of equal or lesser value from our store.\n7. If the new item exceeds the value of the original purchase, you will be responsible for paying the difference.\n8. If the new item is of lesser value, we can provide you with store credit or process a refund for the remaining amount.\n9. Finally, double-check the exchanged item and any relevant documentation before leaving the store.\n\nOur staff will guide you through the process and answer any additional questions or concerns you may have. We appreciate your patience and understanding.\n\nIf you need further assistance or have any other inquiries, feel free to let me know.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "need to exchange a product i purchased online in store could uhelp me",
+    "expected_intent": "exchange_product_in_store",
+    "source_category": "PRODUCT",
+    "tags": "BCILPQ",
+    "reference_response": "I'm happy to help! I can help you with that. If you would like to exchange a product you purchased online in-store, here's what you can do:\n\n1. Find the nearest {{Store Location}} where you would like to make the exchange.\n2. Take the product along with the original packing slip or order confirmation email as proof of purchase.\n3. Speak with a store associate at the {{Customer Service Desk}} or any available staff member.\n4. Explain that you would like to exchange your online purchase, and provide them with the necessary information.\n5. They will guide you through the process and assist you in finding a suitable replacement.\n6. Once the exchange is completed, you'll be all set with your new product.\n\nIf you have any further questions or need assistance, feel free to let me know.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "could I exchange a fucking item in store?",
+    "expected_intent": "exchange_product_in_store",
+    "source_category": "PRODUCT",
+    "tags": "BILPW",
+    "reference_response": "I sincerely apologize for any frustration or inconvenience you may have experienced with the item you want to exchange. We understand that you have a product you would like to exchange at one of our store locations. I'm here to guide you through the process.\n\nTo proceed with the exchange, please follow these steps:\n\n1. Locate the nearest {{Store Location}} by visiting our website or using our mobile app.\n2. Once you're at the store, approach one of our friendly staff members at the {{Customer Service Desk}}.\n3. Provide them with the product you wish to exchange and let them know the reason for the exchange.\n4. Our staff will assist you in finding a suitable alternative or guide you through the selection process if you're uncertain about the replacement item.\n5. Once you've chosen the new product, the staff will process the exchange and provide you with any additional instructions or information.\n6. Don't forget to bring along the original receipt or proof of purchase to expedite the process.\n\nPlease note that our store exchange policy may have certain conditions or limitations, such as the timeframe for exchanges or the eligibility of the item for exchange. We always strive to provide the best customer service, and our team at the store will gladly assist you with any further questions or concerns you may have.\n\nIf there's anything else you need assistance with, please feel free to let me know.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I got to exchange an item I bought online  in store, where do I do it?",
+    "expected_intent": "exchange_product_in_store",
+    "source_category": "PRODUCT",
+    "tags": "BCIZ",
+    "reference_response": "Indeed! I can help you with that. If you purchased an item online and would like to exchange it in-store, here's what you'll need to do:\n\n1. Locate the nearest store location. You can find the store locator on our website or mobile app.\n\n2. Take the item you want to exchange along with the receipt or proof of purchase. It's important to have the original receipt or proof of purchase to facilitate the exchange process.\n\n3. Once you're at the store, head to the customer service desk or approach any store associate. They will assist you with the exchange process.\n\n4. Provide the necessary information, such as your order number or any relevant details about the item you wish to exchange. This will help the store associate locate your purchase in their system.\n\n5. The store associate will guide you through the exchange process, check the item's condition, and assist you in finding a suitable replacement.\n\nIf you have any further questions or need assistance with the exchange, feel free to ask the store associate. They'll be more than happy to help you. Happy shopping!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I do not understand you, I need help talking to a fucking human",
+    "expected_intent": "human_agent",
+    "source_category": "CONTACT",
+    "tags": "BCELW",
+    "reference_response": "I apologize if there has been any confusion in understanding your query. I completely understand the need for human assistance in certain situations. I'm here to help you. Please provide me with more details about your issue or concern, and I will do my best to assist you.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "could I speak with a human agent?",
+    "expected_intent": "human_agent",
+    "source_category": "CONTACT",
+    "tags": "BILP",
+    "reference_response": "I'll make it happen! I completely understand that sometimes it's necessary to speak with a human operator for more personalized assistance. Your satisfaction is our top priority, and we want to make sure we address all your concerns effectively. Please hold on for a moment while I connect you with a human agent who will be able to assist you further. Thank you for your patience and understanding!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "talk to a fucking human",
+    "expected_intent": "human_agent",
+    "source_category": "CONTACT",
+    "tags": "BLW",
+    "reference_response": "Our team regrets and is sorry for any frustration or difficulties you may have experienced while attempting to reach a human agent. I completely understand that there are certain situations where speaking to a real person can be more helpful. Rest assured, I'm here to assist you to the best of my abilities, and I'll do my utmost to address your concerns. Please let me know how I can assist you further.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "can ya help me to talk ot a fucking human agent",
+    "expected_intent": "human_agent",
+    "source_category": "CONTACT",
+    "tags": "BIQWZ",
+    "reference_response": "We recognize the inconvenience and apologize for any frustration or difficulties you may have encountered while seeking assistance. As an AI chatbot, I'm here to help you to the best of my ability. If you need to speak to a human agent, please provide me with some context or specific details about the issue you're facing. This will help me direct you to the right department or provide you with the most relevant contact information for a human representative. Rest assured, I'm here to support you in resolving your concerns.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I would like to talk to a human agent, could I get soem help?",
+    "expected_intent": "human_agent",
+    "source_category": "CONTACT",
+    "tags": "BCIPZ",
+    "reference_response": "I've got that sometimes it's helpful to speak with a human agent. Our team is here to assist you. To connect with a human agent, you have a few options:\n\n1. Live Chat: You can chat with one of our support representatives by visiting our website at {{Company Website URL}} and clicking on the \"Live Chat\" feature. They'll be able to answer your questions and provide any assistance you may need.\n\n2. Phone Support: Our customer support team is available over the phone at {{Customer Support Phone Number}}. They can help address your concerns and provide personalized assistance.\n\n3. Email: If you prefer to communicate via email, you can reach us at {{Customer Support Email}}. Simply send us your query, and we'll get back to you as soon as possible.\n\nWhichever method you choose, our team of experienced agents is ready to help you out. Feel free to reach out to us, and we'll do everything we can to assist you.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "one of the items from my delivery isnt included will uhelp me to report it",
+    "expected_intent": "missing_item",
+    "source_category": "DELIVERY",
+    "tags": "BCIPQ",
+    "reference_response": "Our team regrets and is sorry for the inconvenience caused by the missing item in your delivery. I'll be more than happy to assist you in reporting it. Here's what we can do:\n\n1. First, please provide me with your {{Order Number}} so that I can access the details of your delivery.\n\n2. Once I have the order details, I'll initiate the process of reporting the missing item on your behalf.\n\n3. Our customer support team will investigate the issue and work on resolving it as quickly as possible.\n\n4. Rest assured, we understand the importance of getting the missing item to you, and we'll do our best to make it right.\n\nIf there's any additional information or concerns you'd like to share, please don't hesitate to let me know. We appreciate your patience, and we're here to assist you throughout the process.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "one of the items from my shipment isn't included, could I report it?",
+    "expected_intent": "missing_item",
+    "source_category": "DELIVERY",
+    "tags": "BCILP",
+    "reference_response": "I understand your concern about the missing item from your shipment, and I apologize for the inconvenience caused. Let's get this resolved for you. Please follow these steps to report the missing item:\n\n1. Go to our website and log into your account.\n2. Navigate to your order history or order details page.\n3. Locate the specific order that is missing the item.\n4. Click on the \"Report an Issue\" or \"Contact Customer Support\" option.\n5. Provide the necessary details such as the order number and the item that is missing.\n6. Our customer support team will review your report and investigate the issue.\n7. They will get back to you with a resolution or further instructions.\n\nWe take this matter seriously and will do our best to rectify the situation as quickly as possible. Thank you for your patience and cooperation. If you have any other questions or concerns, feel free to let me know.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "one of the fucking products from my delivery is not deliered could ureport it",
+    "expected_intent": "missing_item",
+    "source_category": "DELIVERY",
+    "tags": "BCEILPQWZ",
+    "reference_response": "I genuinely apologize for the inconvenience caused by the missing item in your delivery. I understand how frustrating this must be for you. Rest assured, I'll do my best to assist you in reporting it. To get started, could you please provide me with your {{Order Number}}? Once I have that information, I'll immediately look into the issue and escalate it to the appropriate department for further investigation. Thank you for bringing this to our attention, and please let me know if there's anything else I can assist you with.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "my delivery is not complete, I want  assistance to report a fucking incomplete order",
+    "expected_intent": "missing_item",
+    "source_category": "DELIVERY",
+    "tags": "BCELWZ",
+    "reference_response": "I deeply apologize for the inconvenience caused by the missing item in your delivery. I'm here to assist you in reporting the incomplete order and resolving this issue. To get started, could you please provide me with your {{Order Number}}? Once I have that information, I'll investigate the situation and work on a solution for you. Your satisfaction is our top priority, and we'll make sure to address this issue promptly. Thank you for your patience and understanding.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "an item from my roder is not included help me reporting it",
+    "expected_intent": "missing_item",
+    "source_category": "DELIVERY",
+    "tags": "BCEQZ",
+    "reference_response": "I feel the need to apologize for the inconvenience caused by the missing item in your order. I understand how frustrating it can be to receive an incomplete delivery. Not to worry, I'm here to assist you in reporting the missing item. To proceed, please provide me with your order details, such as the {{Order Number}} and the specific item that is missing. Once I have this information, I will promptly escalate the issue to our support team who will investigate the matter and work towards resolving it for you. Your satisfaction is our priority, and we appreciate your patience as we work to fix this for you.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I'd like to create  an account",
+    "expected_intent": "open_account",
+    "source_category": "ACCOUNT",
+    "tags": "BLPZ",
+    "reference_response": "Absolutely, I can assist you in creating a new user account. Opening a new account is a straightforward process. Here's what you need to do:\n\n1. Visit our website at {{Company Website URL}}.\n2. Look for the \"Sign Up\" or \"Create an Account\" button.\n3. Click on it and you'll be directed to the account registration page.\n4. Fill in the required information, such as your {{Name}}, {{Email Address}}, and {{Password}}.\n5. Review and accept the terms and conditions, if applicable.\n6. Complete the registration process by clicking on the \"Create Account\" or similar button.\n\nOnce you complete these steps, your new account will be ready to use. If you have any questions or encounter any difficulties during the process, feel free to reach out to our customer support team at {{Customer Support Phone Number}} or through our Live Chat feature on the website. We're here to help you get started!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I need a user account, can you create it?",
+    "expected_intent": "open_account",
+    "source_category": "ACCOUNT",
+    "tags": "BCIL",
+    "reference_response": "Assuredly! I'd be more than happy to assist you in creating your user account. To get started, please provide me with a few details. Could you please let me know your full name and email address? Once I have that information, I'll guide you through the account creation process step by step. Don't worry, your information will be securely handled and kept confidential.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "where to create a fucking user account ?",
+    "expected_intent": "open_account",
+    "source_category": "ACCOUNT",
+    "tags": "BILWZ",
+    "reference_response": "We acknowledge the issue, and we're sorry for the inappropriate language used, but I understand that you're looking to create a user account. I'm here to help you with that. \n\nTo create a user account, you can follow these simple steps:\n\n1. Visit our website at {{Company Website URL}}.\n2. Look for the \"Sign Up\" or \"Create an Account\" button, usually located at the top right corner of the webpage.\n3. Click on the button, and you will be redirected to the account creation page.\n4. Fill in the required information, such as your name, email address, and password.\n5. Make sure to choose a strong password to protect your account.\n6. Once you have entered all the necessary details, click on the \"Create Account\" button to complete the process.\n\nIf you encounter any issues or need further assistance during the account creation process, please let me know. I'm here to guide you every step of the way.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I have to open an account, where can I do it?",
+    "expected_intent": "open_account",
+    "source_category": "ACCOUNT",
+    "tags": "BCI",
+    "reference_response": "Sure, I can help you with that! Opening an account is a simple process. Here's what you need to do:\n\n1. Visit our website at {{Company Website URL}}.\n2. Look for the \"Sign Up\" or \"Create an Account\" button.\n3. Click on it and you'll be directed to the account registration page.\n4. Fill in the required information, such as your name, email address, and password.\n5. Follow any additional steps or prompts on the registration page.\n6. Once you've completed the registration, you'll have successfully opened your account!\n\nIf you encounter any difficulties or have any questions along the way, feel free to reach out to our customer support team at {{Customer Support Phone Number}}. They're available {{Customer Support Working Hours}} and will be happy to assist you. Welcome aboard!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "ii want help registering",
+    "expected_intent": "open_account",
+    "source_category": "ACCOUNT",
+    "tags": "BQZ",
+    "reference_response": "Assuredly! I'd be more than happy to assist you with the registration process. Registering for an account is easy and straightforward. Here's what you need to do:\n\n1. Go to our website and look for the \"Sign Up\" or \"Register\" button.\n2. Click on it and you'll be directed to the registration page.\n3. Fill in the required information, such as your {{Name}}, {{Email Address}}, and {{Password}}.\n4. Make sure to review and accept our terms and conditions.\n5. Once you've entered all the necessary details, click on \"Register\" to create your account.\n\nIf you encounter any difficulties or have any questions along the way, feel free to ask. I'm here to help you through the registration process.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I need my purchase history, where could I see it?",
+    "expected_intent": "order_history",
+    "source_category": "ACCOUNT",
+    "tags": "BCILP",
+    "reference_response": "Definitely! I can assist you with that. To view your purchase history, please follow these simple steps:\n\n1. Log in to your {{Company Name}} account.\n2. Navigate to the \"{{Order History}}\" section.\n3. You will find a detailed list of all your past purchases, including dates, items, and order numbers.\n\nIf you have any trouble accessing your purchase history or need further assistance, feel free to reach out. I'm here to help!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "where can i see the fucking orderhistory",
+    "expected_intent": "order_history",
+    "source_category": "ACCOUNT",
+    "tags": "BILQWZ",
+    "reference_response": "We're accountable for, and we apologize for any confusion you may have encountered while trying to access your order history. I'm here to help you with that! To view your order history, please follow these steps:\n\n1. Log in to your account on our website.\n2. Go to the \"{{Order History}}\" section. It should be located in the main menu or under your account settings.\n3. Once you're in the order history section, you should see a list of all your previous orders, including details such as order dates, order numbers, and order statuses.\n\nIf you have any trouble finding the order history section or encounter any issues, please let me know. I'll be glad to assist you further and ensure you have access to your order history.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "id like to check the fucking purchase history can ya help me",
+    "expected_intent": "order_history",
+    "source_category": "ACCOUNT",
+    "tags": "BCILPQW",
+    "reference_response": "Please know that I'm sorry for any inconvenience you may have experienced. I understand that you would like to check your purchase history. I'm here to assist you with that. To access your purchase history, please follow these steps:\n\n1. Visit our website and log in to your account using your credentials.\n2. Once you are logged in, navigate to the \"Order History\" section.\n3. In the \"Order History\" section, you will be able to view all your previous purchases along with the relevant details, such as order dates, items purchased, and order status.\n\nIf you have any trouble accessing your purchase history or need any further assistance, please let me know. I'm here to help!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "i need my order history  can uhelp me seeing it",
+    "expected_intent": "order_history",
+    "source_category": "ACCOUNT",
+    "tags": "BCILQZ",
+    "reference_response": "Of course, I'm here to assist you with that! To view your order history, you can follow these simple steps:\n\n1. Log in to your account on our website or mobile app.\n2. Navigate to the \"{{Order History}}\" or \"{{My Orders}}\" section.\n3. You should be able to see a list of all your past orders and their details, such as order numbers, dates, and status.\n4. If you need more information about a specific order, click on it to expand the details.\n\nIf you're having trouble accessing your order history or need further assistance, please let me know. I'm more than happy to help!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "need to look for something i purchased where can i check my fucking purchase history",
+    "expected_intent": "order_history",
+    "source_category": "ACCOUNT",
+    "tags": "BCILQW",
+    "reference_response": "I genuinely apologize for any frustration or inconvenience you may have experienced while trying to access your purchase history. Don't worry, I'll be glad to help you with this.\n\nTo check your purchase history, you can follow these steps:\n\n1. Log in to your account on our website.\n2. Once logged in, navigate to the \"{{Order History}}\" section.\n3. In the order history section, you will find a list of all your past purchases, including the details of each order, such as the products you purchased, the dates, and the order numbers.\n\nIf you encounter any issues or have trouble finding the information you're looking for, please let me know. I'm here to assist you every step of the way!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "where can I mak fucking transfers?",
+    "expected_intent": "pay",
+    "source_category": "PAYMENT",
+    "tags": "BILMWZ",
+    "reference_response": "We recognize the inconvenience and apologize for any inconvenience you may have encountered. I understand that you're looking for information on making transfers. I'm here to help! To make transfers, you can follow these steps:\n\n1. Log in to your account on our website or mobile app.\n2. Navigate to the \"Transfer\" or \"Payments\" section.\n3. Select the option to initiate a new transfer.\n4. Choose the type of transfer you want to make, such as a bank transfer or an online payment.\n5. Enter the recipient's details, including their bank account information or email address.\n6. Specify the amount you wish to transfer.\n7. Review the transfer details to ensure everything is accurate.\n8. Confirm the transfer and follow any additional prompts for authorization or verification.\n\nIf you encounter any difficulties during the process or have any specific questions, please don't hesitate to ask. I'm here to provide any further assistance you may need.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I woiuld like to make payments, how do I do it?",
+    "expected_intent": "pay",
+    "source_category": "PAYMENT",
+    "tags": "BCIMPZ",
+    "reference_response": "I'll do my best! I'm here to assist you with your payment. Making payments is quick and easy. Here's a step-by-step guide to help you:\n\n1. Log in to your {{Account}} on our website.\n2. Navigate to the {{Billing}} or {{Payments}} section.\n3. Choose the payment method that works best for you, such as {{Credit Card}}, {{Debit Card}}, or {{Online Banking}}.\n4. Enter the required payment details, including the amount you wish to pay.\n5. Review the payment information and ensure everything looks good.\n6. Click on the {{Submit}} or {{Pay Now}} button to complete the payment.\n\nIf you encounter any issues or have further questions, please don't hesitate to reach out to our {{Customer Support}} team. They are available {{Customer Support Working Hours}} at {{Customer Support Phone Number}} or through the Live Chat on our website at {{Company Website URL}}. We're here to make your payment process smooth and hassle-free.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I'd like to pay, will you help me?",
+    "expected_intent": "pay",
+    "source_category": "PAYMENT",
+    "tags": "BCIP",
+    "reference_response": "I'll do my best! I'm here to assist you with your payment. Let's get that taken care of. To make a payment, please follow these simple steps:\n\n1. Log in to your {{Account}} on our website.\n2. Go to the \"{{Billing}}\" or \"{{Payments}}\" section.\n3. Select the option to make a payment.\n4. Choose your preferred payment method, such as credit card or online banking.\n5. Enter the required payment details, including the amount you want to pay.\n6. Review the payment information to ensure accuracy.\n7. Click on the \"Submit\" or \"Pay Now\" button to complete the payment.\n\nIf you encounter any difficulties during the process or have any questions, feel free to reach out to our {{Customer Support Team}}. They are available {{Customer Support Working Hours}} via {{Customer Support Phone Number}} or through the Live Chat on our website at {{Company Website URL}}.\n\nThank you for choosing our service. We appreciate your business!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I want to make transfers, help me",
+    "expected_intent": "pay",
+    "source_category": "PAYMENT",
+    "tags": "BCLM",
+    "reference_response": "Unquestionably! I'd be delighted to assist you with making transfers. To get started, could you please let me know which specific type of transfers you would like to make? Are you looking to transfer funds between your own accounts, send money to another person, or make international transfers? Providing this information will help me guide you through the process more accurately.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I'd like to check out can ya help me",
+    "expected_intent": "pay",
+    "source_category": "PAYMENT",
+    "tags": "BCILPQ",
+    "reference_response": "Definitely! I'd be happy to assist you with your checkout process. To ensure a smooth and seamless checkout experience, please follow these steps:\n\n1. Add the desired items to your shopping cart by clicking on the \"Add to Cart\" button next to each item.\n2. Once you've finished adding items, click on the shopping cart icon or the \"View Cart\" button to review your order.\n3. On the cart page, ensure that the quantities and variants of the items are correct. You can update or remove items as needed.\n4. Proceed to the checkout page by clicking on the \"Checkout\" button.\n5. Fill in your shipping information, including your full name, address, and contact details.\n6. Select your preferred payment method from the available options. We accept various payment methods, including credit cards, debit cards, and PayPal.\n7. Enter your payment details and review the order summary to ensure everything is accurate.\n8. Click on the \"Place Order\" or \"Complete Purchase\" button to finalize your transaction.\n\nIf you encounter any issues or have any questions during the checkout process, feel free to reach out to our customer support team. They are available {{Customer Support Working Hours}} at {{Customer Support Phone Number}} or through the Live Chat on our website at {{Company Website URL}}.\n\nHappy shopping!",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I cannot pay, notify of payment problems",
+    "expected_intent": "payment_issue",
+    "source_category": "PAYMENT",
+    "tags": "BCELM",
+    "reference_response": "We recognize the inconvenience and apologize for the inconvenience you're facing with the payment. I understand how frustrating it can be. Don't worry, I'm here to help you resolve this issue. Could you please provide me with more details about the problem you're encountering? It would be helpful to know if you're receiving any error messages or if there's a specific payment method you're having trouble with. Once I have more information, I'll be able to assist you further and find a solution.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I'd like to solve fucking payment problems where could i do it",
+    "expected_intent": "payment_issue",
+    "source_category": "PAYMENT",
+    "tags": "BCILMPQW",
+    "reference_response": "I sincerely apologize for any inconvenience you've encountered with your payment. I'm here to help you resolve this issue. To address payment problems, you can follow these steps:\n\n1. Visit our website at {{Company Website URL}}.\n2. Go to the \"{{Help}}\", \"{{Support}}\", or \"{{Customer Service}}\" section.\n3. Look for the \"{{Payment Issues}}\", \"{{Troubleshooting Payments}}\", or \"{{Payment Support}}\" subsection.\n4. You'll find detailed information about common payment problems and possible solutions.\n5. If you can't find the answer you're looking for, you can always reach out to our customer support team. They'll be more than happy to assist you further.\n\nPlease remember to provide any necessary details or error messages when contacting customer support so that they can quickly identify and resolve your specific payment issue.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "my card did notwork where do i report a fucking payment problem",
+    "expected_intent": "payment_issue",
+    "source_category": "PAYMENT",
+    "tags": "BCEILQWZ",
+    "reference_response": "I genuinely apologize for the inconvenience you've faced with your payment. I understand the frustration this may have caused you. Rest assured, I'm here to help you resolve the issue. \n\nTo report a payment problem, please follow these steps:\n\n1. Visit our website at {{Company Website URL}}.\n2. Navigate to the \"{{Help}}\", \"{{Support}}\", or \"{{Contact Us}}\" section.\n3. Look for the option to report a payment issue. It might be labeled as \"{{Payment Problems}}\", \"{{Payment Disputes}}\", or something similar.\n4. Click on that option and you'll be directed to a form or a page where you can provide details about the problem you faced with your card.\n5. Fill out the form or provide the necessary information as accurately and completely as possible.\n6. Once you've submitted the report, our dedicated team will review your case and get back to you with a resolution or further instructions.\n\nIf you have any other questions or need further assistance, please let me know. I'm here to help you through this process.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "my credit card was declined, I want help reporting a fucking payment issue",
+    "expected_intent": "payment_issue",
+    "source_category": "PAYMENT",
+    "tags": "BCW",
+    "reference_response": "We recognize the inconvenience and apologize for the inconvenience you've encountered with your credit card being declined. I understand that reporting a payment issue is crucial in situations like this. Please follow these steps to get the assistance you need:\n\n1. Contact our {{Customer Support Team}} immediately through the provided contact details on our website or mobile app.\n2. Explain the situation, emphasizing that your credit card was declined and you need guidance or a solution.\n3. Our customer support team will gather all the required details, including your account information and the specific transaction in question.\n4. They will initiate an investigation into the payment issue and work to resolve it as quickly as possible.\n5. In the meantime, if you have an alternative payment method, you may consider using it for your transactions to avoid any further inconvenience.\n\nRest assured, our team is committed to resolving payment issues promptly and providing you with a satisfactory solution. If you have any additional concerns or questions, please feel free to share them with our customer support team.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  },
+  {
+    "input": "I didn't get a payment valkdation, I got to notify of fucking payment problems",
+    "expected_intent": "payment_issue",
+    "source_category": "PAYMENT",
+    "tags": "BCLMWZ",
+    "reference_response": "I sincerely apologize for any frustration or inconvenience you've experienced with your payment. I understand that you didn't receive a payment validation notification and you need to report the payment problems. Rest assured, I'm here to assist you. To better understand and address the issue, could you please provide me with your {{Order Number}} or any relevant details regarding the payment problem? Once I have the necessary information, I'll look into it right away and work towards a resolution. Thank you for bringing this to our attention, and I appreciate your patience.",
+    "source_dataset": "Bitext retail ecommerce chatbot training dataset",
+    "license": "CDLA-Sharing-1.0",
+    "source_url": "https://huggingface.co/datasets/bitext/Bitext-retail-ecommerce-llm-chatbot-training-dataset"
+  }
+]

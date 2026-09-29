@@ -1,0 +1,242 @@
+[
+  {
+    "intent": "add_product",
+    "sample_count": 5,
+    "categories": [
+      "CART"
+    ],
+    "examples": [
+      "I got to add an item to the cart",
+      "wanna add fucking products to the basket can huelp me",
+      "i have to add products to the basket i ned help"
+    ]
+  },
+  {
+    "intent": "availability",
+    "sample_count": 5,
+    "categories": [
+      "PRODUCT"
+    ],
+    "examples": [
+      "i got to see the availability of an item i need assixtance",
+      "I want to see the fuckking item availability, can you help me?",
+      "when will this item be available?"
+    ]
+  },
+  {
+    "intent": "availability_in_store",
+    "sample_count": 5,
+    "categories": [
+      "PRODUCT"
+    ],
+    "examples": [
+      "I would like to check the availability of a fucking item in store, how could I do it ?",
+      "I need to see the availabilitt of an item in store, could you help me?",
+      "can you help me seeing the availability of an item in store?"
+    ]
+  },
+  {
+    "intent": "availability_online",
+    "sample_count": 5,
+    "categories": [
+      "PRODUCT"
+    ],
+    "examples": [
+      "I'd like to see the availability of a prodcut online i need assistance",
+      "were to see the availability of products online?",
+      "I want to check the availability of iems online, where do I do it?"
+    ]
+  },
+  {
+    "intent": "cancel_order",
+    "sample_count": 5,
+    "categories": [
+      "ORDER"
+    ],
+    "examples": [
+      "i got to cancel an online order i need assistance",
+      "i have to cancel anm online order will ya help me",
+      "I bought a fucking item but I do not wantt it, how could I cancel the fucking order?"
+    ]
+  },
+  {
+    "intent": "change_account",
+    "sample_count": 5,
+    "categories": [
+      "ACCOUNT"
+    ],
+    "examples": [
+      "I want to make a change to my fucking account, can you help me?",
+      "I need to change my account, hw can I do it?",
+      "wanna make a change to my fucking profile i need hepl"
+    ]
+  },
+  {
+    "intent": "change_order",
+    "sample_count": 5,
+    "categories": [
+      "ORDER"
+    ],
+    "examples": [
+      "i bought an item but i chose an wrong color i have to change my fucking online order",
+      "need to modify my fucking order before usend it can i get some help",
+      "i purchased a product but i chose a wrong model i got to update my fucking online order"
+    ]
+  },
+  {
+    "intent": "close_account",
+    "sample_count": 5,
+    "categories": [
+      "ACCOUNT"
+    ],
+    "examples": [
+      "i got to deleete my user account where can i do it",
+      "I have to cancel my fucking user account, where do I do it?",
+      "i do not need my fucking account I'd like to cancel it"
+    ]
+  },
+  {
+    "intent": "customer_service",
+    "sample_count": 5,
+    "categories": [
+      "CONTACT"
+    ],
+    "examples": [
+      "i have to speak with fucking clieent service where to do it",
+      "I got to call customer support, how do I do ti?",
+      "what is the customer service no?"
+    ]
+  },
+  {
+    "intent": "damaged_delivery",
+    "sample_count": 5,
+    "categories": [
+      "DELIVERY"
+    ],
+    "examples": [
+      "one of the items I bought wzs damaged in shipping, can you help me to report it?",
+      "could ya help me reporting an fucking damaged package",
+      "the fucking package i received was damaged could uhelp me reporting it"
+    ]
+  },
+  {
+    "intent": "delivery_issue",
+    "sample_count": 5,
+    "categories": [
+      "DELIVERY"
+    ],
+    "examples": [
+      "I have a fucking problem with my package, I need assistance reporting it",
+      "I did not receive my shipment, can you help me report a fucking delivery issue?",
+      "my delivery was sent to the wrong address can ya help  me report fucking delivery issues"
+    ]
+  },
+  {
+    "intent": "delivery_time",
+    "sample_count": 5,
+    "categories": [
+      "DELIVERY"
+    ],
+    "examples": [
+      "id like to see the delivery date of my purcnase help me",
+      "I'd like to see the delivery time where can i do it",
+      "information about the delivery time"
+    ]
+  },
+  {
+    "intent": "exchange_product",
+    "sample_count": 5,
+    "categories": [
+      "PRODUCT"
+    ],
+    "examples": [
+      "I'd like to exchange a fucking product i bought where to do it",
+      "I got to exchange the fucking orders I purchased , how to do it?",
+      "I have to exchangd the items I bought, where do I do it?"
+    ]
+  },
+  {
+    "intent": "exchange_product_in_store",
+    "sample_count": 5,
+    "categories": [
+      "PRODUCT"
+    ],
+    "examples": [
+      "I'd like to exchange a fucking item i purchased online in store will ya help me",
+      "I have to exchange a fucking item in store , how can I do it?",
+      "need to exchange a product i purchased online in store could uhelp me"
+    ]
+  },
+  {
+    "intent": "human_agent",
+    "sample_count": 5,
+    "categories": [
+      "CONTACT"
+    ],
+    "examples": [
+      "I do not understand you, I need help talking to a fucking human",
+      "could I speak with a human agent?",
+      "talk to a fucking human"
+    ]
+  },
+  {
+    "intent": "missing_item",
+    "sample_count": 5,
+    "categories": [
+      "DELIVERY"
+    ],
+    "examples": [
+      "one of the items from my delivery isnt included will uhelp me to report it",
+      "one of the items from my shipment isn't included, could I report it?",
+      "one of the fucking products from my delivery is not deliered could ureport it"
+    ]
+  },
+  {
+    "intent": "open_account",
+    "sample_count": 5,
+    "categories": [
+      "ACCOUNT"
+    ],
+    "examples": [
+      "I'd like to create  an account",
+      "I need a user account, can you create it?",
+      "where to create a fucking user account ?"
+    ]
+  },
+  {
+    "intent": "order_history",
+    "sample_count": 5,
+    "categories": [
+      "ACCOUNT"
+    ],
+    "examples": [
+      "I need my purchase history, where could I see it?",
+      "where can i see the fucking orderhistory",
+      "id like to check the fucking purchase history can ya help me"
+    ]
+  },
+  {
+    "intent": "pay",
+    "sample_count": 5,
+    "categories": [
+      "PAYMENT"
+    ],
+    "examples": [
+      "where can I mak fucking transfers?",
+      "I woiuld like to make payments, how do I do it?",
+      "I'd like to pay, will you help me?"
+    ]
+  },
+  {
+    "intent": "payment_issue",
+    "sample_count": 5,
+    "categories": [
+      "PAYMENT"
+    ],
+    "examples": [
+      "I cannot pay, notify of payment problems",
+      "I'd like to solve fucking payment problems where could i do it",
+      "my card did notwork where do i report a fucking payment problem"
+    ]
+  }
+]

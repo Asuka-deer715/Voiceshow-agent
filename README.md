@@ -191,10 +191,13 @@ the configured DeepSeek model with a source filename.
 
 ## Catalog and evaluation
 
-The demo catalog contains 15 deterministic products across running shoes, headphones,
-watches, and lipstick. Product records include category, price, stock, feature tags,
-scene tags, image paths, and reference URLs where manufacturer information was checked.
-Prices and stock are fixed fixtures for repeatable evaluation rather than live commerce data.
+The demo catalog now contains 113 products. The 15 curated VoiceShop products cover
+running shoes, headphones, watches, and lipstick; 98 additional records were batch
+imported from a small external product metadata sample and kept under the `其他` category
+because their source taxonomy does not safely map to the four recommendation categories.
+Product records include category, price, stock, feature tags, scene tags, image paths,
+source metadata, and reference URLs where available. External prices are source snapshots,
+not live commerce quotes or inventory.
 
 The evaluation set is stored in `data/eval_cases.json` and covers single-turn and
 multi-turn conversations, budget filtering, category isolation, unsupported categories,
