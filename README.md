@@ -159,6 +159,15 @@ and model-call records containing latency, token usage, model, prompt version, a
 Intent results use a semantic cache keyed by the model, prompt context, and query. Redis
 is used when configured; local memory is available for development.
 
+## Database runtime
+
+The service uses SQLAlchemy engines with separate read and write sessions. SQLite runs
+with WAL mode, a 30-second busy timeout, foreign-key checks, connection pooling, and
+slow-query logging. Schema changes are managed by Alembic under `alembic/versions/`;
+the web server applies migrations once during startup rather than executing DDL per
+request. Order creation writes the order and its initial order event inside one explicit
+transaction. PostgreSQL can be enabled with `DATABASE_URL` and `DATABASE_READ_URL`.
+
 ## LLM configuration
 
 The service uses a DeepSeek model through an OpenAI-compatible API for intent understanding and open-ended questions:

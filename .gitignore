@@ -2,6 +2,7 @@
 .env.*
 !.env.example
 data/*.db
+data/*.db-*
 __pycache__/
 app/__pycache__/
 *.pyc

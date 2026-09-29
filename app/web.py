@@ -21,7 +21,6 @@ class VoiceShopHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         parsed = urlparse(self.path)
         path = parsed.path
-        db.init_db()
         if path == "/api/eval":
             self.send_json(evaluate())
             return
@@ -74,7 +73,6 @@ class VoiceShopHandler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         try:
             payload = self.read_json()
-            db.init_db()
             if parsed.path == "/api/recommend":
                 query = str(payload.get("query", "")).strip()
                 if not query:

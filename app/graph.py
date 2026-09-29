@@ -251,7 +251,6 @@ agent_graph = build_agent_graph()
 
 
 def run_agent(user_input: str, session_id: str | None = None, user_id: int = 1) -> dict[str, Any]:
-    db.init_db()
     state: AgentState = {
         "query": user_input,
         "session_id": session_id or str(uuid.uuid4()),
