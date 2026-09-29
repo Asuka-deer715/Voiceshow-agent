@@ -1,27 +1,87 @@
 [
   {
+    "id": "shoe_budget_500",
     "input": "我想买一双适合跑步的鞋，预算500以内，轻一点",
     "expected_status": "answered",
     "expected_slots": {"category": "跑鞋", "budget_max": 500, "usage_scene": "running", "brand_preference": null, "must_have": ["light"], "avoid": []},
-    "expected_product_ids": [1]
+    "expected_product_ids": [1],
+    "expected_category": "跑鞋",
+    "forbidden_categories": ["耳机", "手表", "口红"]
   },
   {
-    "input": "预算1200，想要轻一点又缓震的跑鞋",
+    "id": "shoe_context_budget",
+    "turns": ["我想买个鞋子", "预算1200，想要轻一点又缓震"],
     "expected_status": "answered",
     "expected_slots": {"category": "跑鞋", "budget_max": 1200, "usage_scene": null, "brand_preference": null, "must_have": ["light", "cushion"], "avoid": []},
-    "expected_product_ids": [2]
+    "expected_product_ids": [2, 8],
+    "expected_category": "跑鞋",
+    "forbidden_categories": ["耳机", "手表", "口红"]
   },
   {
+    "id": "headphone_noise_cancel",
     "input": "想买降噪耳机，预算2500，通勤用",
     "expected_status": "answered",
     "expected_slots": {"category": "耳机", "budget_max": 2500, "usage_scene": "noise_cancel", "brand_preference": null, "must_have": ["noise_cancel"], "avoid": []},
-    "expected_product_ids": [4]
+    "expected_product_ids": [4, 10],
+    "expected_category": "耳机",
+    "forbidden_categories": ["跑鞋", "手表", "口红"]
   },
   {
+    "id": "watch_running",
+    "input": "我想买运动手表，预算1000左右，主要记录跑步",
+    "expected_status": "answered",
+    "expected_slots": {"category": "手表", "budget_max": 1000, "usage_scene": "running", "brand_preference": null, "must_have": [], "avoid": []},
+    "expected_product_ids": [13],
+    "expected_category": "手表",
+    "forbidden_categories": ["跑鞋", "耳机", "口红"]
+  },
+  {
+    "id": "lipstick_business",
+    "input": "想买一支适合正式场合的口红，预算500以内",
+    "expected_status": "answered",
+    "expected_slots": {"category": "口红", "budget_max": 500, "usage_scene": "business", "brand_preference": null, "must_have": [], "avoid": []},
+    "expected_product_ids": [14, 15],
+    "expected_category": "口红",
+    "forbidden_categories": ["跑鞋", "耳机", "手表"]
+  },
+  {
+    "id": "unsupported_fruit",
+    "input": "我要买水果",
+    "expected_status": "clarify",
+    "expected_slots": {"category": null, "budget_max": null, "usage_scene": null, "brand_preference": null, "must_have": [], "avoid": []},
+    "expected_product_ids": [],
+    "expected_response_contains": "暂不支持水果"
+  },
+  {
+    "id": "clarify_missing_category",
     "input": "帮我挑个礼物",
     "expected_status": "clarify",
     "expected_slots": {"category": null, "budget_max": null, "usage_scene": null, "brand_preference": null, "must_have": [], "avoid": []},
     "expected_product_ids": []
+  },
+  {
+    "id": "no_match_budget",
+    "turns": ["我想买跑鞋", "预算100"],
+    "expected_status": "answered",
+    "expected_slots": {"category": "跑鞋", "budget_max": 100, "usage_scene": null, "brand_preference": null, "must_have": [], "avoid": []},
+    "expected_product_ids": [],
+    "expected_category": "跑鞋"
+  },
+  {
+    "id": "knowledge_return",
+    "input": "签收后多久可以退货？",
+    "expected_status": "answered",
+    "expected_slots": {"category": null, "budget_max": null, "usage_scene": null, "brand_preference": null, "must_have": [], "avoid": []},
+    "expected_product_ids": [],
+    "expected_response_contains": "after_sales.md"
+  },
+  {
+    "id": "category_isolation",
+    "input": "1000以内有没有耳机",
+    "expected_status": "answered",
+    "expected_slots": {"category": "耳机", "budget_max": 1000, "usage_scene": null, "brand_preference": null, "must_have": [], "avoid": []},
+    "expected_product_ids": [5, 13],
+    "expected_category": "耳机",
+    "forbidden_categories": ["跑鞋", "手表", "口红"]
   }
 ]
-

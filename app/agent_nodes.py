@@ -74,6 +74,8 @@ def extract_slots(state: AgentState) -> AgentState:
 def retrieve_products(state: AgentState) -> AgentState:
     from . import graph as logic
 
+    if not state["slots"].get("category"):
+        return {**state, "recommendations": [], "trace": _trace(state, "retrieve_products", agents=[], candidate_count=0)}
     products, perspectives = logic.retrieve_products(state["slots"], logic.load_products())
     category = state["slots"].get("category")
     if category:

@@ -188,3 +188,25 @@ previous request for shoes. FAQ means frequently asked questions, such as delive
 returns and exchanges. Those questions now enter the RAG flow: knowledge files are
 split into chunks, locally ranked, assembled as context, and optionally summarized by
 the configured DeepSeek model with a source filename.
+
+## Catalog and evaluation
+
+The demo catalog contains 15 deterministic products across running shoes, headphones,
+watches, and lipstick. Product records include category, price, stock, feature tags,
+scene tags, image paths, and reference URLs where manufacturer information was checked.
+Prices and stock are fixed fixtures for repeatable evaluation rather than live commerce data.
+
+The evaluation set is stored in `data/eval_cases.json` and covers single-turn and
+multi-turn conversations, budget filtering, category isolation, unsupported categories,
+no-match budgets, FAQ/RAG answers, and trace-node coverage. Run an offline evaluation
+without consuming model API quota:
+
+```bash
+cd G:\\ai-agent-show\\voiceshop-ai
+$env:EVAL_OFFLINE='1'
+py -3.11 -m app.eval
+```
+
+The current 10-case baseline reports slot F1 0.975, Recall@5 1.0, clarification accuracy
+1.0, category purity 1.0, and response checks 1.0. The report also prints each case's
+trace nodes so retrieval and clarification regressions can be located quickly.
