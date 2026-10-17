@@ -19,7 +19,11 @@
           <button class="nav-item" type="button" data-view="scenes">购物场景</button>
           <button class="nav-item" type="button" data-view="orders">我的订单</button>
         </nav>
-        <button id="speakButton" class="outline-button" type="button">播放回复</button>
+        <div class="topbar-actions">
+          <button id="speakButton" class="outline-button" type="button">播放回复</button>
+          <button id="authButton" class="auth-button" type="button">登录 / 注册</button>
+          <button id="logoutButton" class="auth-button is-hidden" type="button">退出</button>
+        </div>
       </header>
 
       <section class="view active" id="dialogue" data-view-panel>
@@ -60,14 +64,27 @@
               </div>
             </div>
             <div class="composer">
+              <fieldset class="voice-mode" id="voiceModeControl" aria-label="语音模式">
+                <legend class="is-hidden">语音模式</legend>
+                <label><input type="radio" name="voiceMode" value="conversation" checked /><span>语音对话</span></label>
+                <label><input type="radio" name="voiceMode" value="edit" /><span>转写编辑</span></label>
+              </fieldset>
               <div class="composer-input">
                 <textarea id="query" rows="2" aria-label="输入购物需求">今天我想买个鞋子</textarea>
                 <button id="micButton" class="mic-button" type="button" aria-label="开始语音输入" aria-pressed="false" title="语音输入">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14.5a3.5 3.5 0 0 0 3.5-3.5V6a3.5 3.5 0 1 0-7 0v5a3.5 3.5 0 0 0 3.5 3.5Z"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/></svg>
                 </button>
               </div>
+              <div id="voiceCorrection" class="voice-correction" hidden role="status">
+                <span id="voiceCorrectionText"></span>
+                <button id="undoVoiceCorrection" type="button">撤销纠正</button>
+              </div>
               <div class="composer-actions">
-                <span id="voiceStatus">按 Ctrl / ⌘ + Enter 发送，也可以使用语音输入</span>
+                <div id="voiceFeedback" class="voice-feedback" data-state="idle">
+                  <span class="voice-state-dot" aria-hidden="true"></span>
+                  <canvas id="voiceWave" width="224" height="48" aria-hidden="true" hidden></canvas>
+                  <span id="voiceStatus" role="status" aria-live="polite">按 Ctrl / ⌘ + Enter 发送，也可以使用语音输入</span>
+                </div>
                 <button id="runButton" class="primary-button" type="button">开始筛选 <span>↗</span></button>
               </div>
             </div>
@@ -94,7 +111,7 @@
         </div>
         <div class="catalog-layout">
             <aside class="filter-panel"><span class="filter-label">商品分类</span><button class="category active" type="button" data-category="全部">全部商品</button><button class="category" type="button" data-category="跑鞋">跑鞋</button><button class="category" type="button" data-category="耳机">耳机</button><button class="category" type="button" data-category="手表">手表</button><button class="category" type="button" data-category="口红">口红</button><button class="category" type="button" data-category="其他">外部商品</button></aside>
-          <section class="catalog-content"><div class="catalog-toolbar"><div><strong id="catalogTitle">全部商品</strong><span id="catalogSummary">正在加载商品</span></div><span id="sortChip">精选商品</span></div><div id="catalogGrid" class="catalog-grid"></div><article id="productDetail" class="product-detail is-hidden"><div><p class="eyebrow">PRODUCT DETAIL</p><h3 id="detailName">商品详情</h3><p id="detailDescription"></p></div><div class="detail-meta"><strong id="detailPrice"></strong><button id="detailOrderButton" class="primary-button" type="button">立即下单</button></div></article></section>
+          <section class="catalog-content"><div class="catalog-toolbar"><div><strong id="catalogTitle">全部商品</strong><span id="catalogSummary">正在加载商品</span></div><span id="sortChip">精选商品</span></div><div id="catalogGrid" class="catalog-grid"></div></section>
         </div>
       </section>
 
@@ -117,6 +134,45 @@
         <dl id="slotList" class="slot-list"></dl><button id="evalButton" type="button">刷新评测</button><div id="metricGrid" class="metric-grid"></div><p id="traceId">trace pending</p><ol id="traceList" class="trace-list"></ol>
       </section>
     </main>
+
+    <dialog id="productDetail" class="product-detail" aria-labelledby="detailName">
+      <button class="detail-close" type="button" data-detail-close aria-label="关闭商品详情">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+      </button>
+      <div class="detail-visual"><img id="detailImage" alt="" /></div>
+      <div class="detail-copy">
+        <div><p class="eyebrow">PRODUCT DETAIL</p><h3 id="detailName">商品详情</h3><p id="detailDescription"></p></div>
+        <div class="detail-meta"><strong id="detailPrice"></strong><button id="detailOrderButton" class="primary-button" type="button">立即下单</button></div>
+      </div>
+    </dialog>
+
+    <dialog id="authDialog" class="auth-dialog" aria-labelledby="authTitle">
+      <button class="auth-close" type="button" data-auth-close aria-label="关闭登录窗口">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+      </button>
+      <div class="auth-intro">
+        <span class="brand-mark">V</span>
+        <div><h2 id="authTitle">欢迎回来</h2><p id="authDescription">登录后可保存会话、记录浏览并管理订单。</p></div>
+      </div>
+      <div class="auth-tabs" role="tablist" aria-label="账号操作">
+        <button class="active" type="button" role="tab" aria-selected="true" data-auth-mode="login">登录</button>
+        <button type="button" role="tab" aria-selected="false" data-auth-mode="register">注册</button>
+      </div>
+      <form id="authForm" class="auth-form" novalidate>
+        <label id="nicknameField" class="is-hidden">昵称（可选）<input id="authNickname" name="nickname" type="text" autocomplete="nickname" maxlength="40" /></label>
+        <label>邮箱<input id="authEmail" name="email" type="email" autocomplete="email" maxlength="254" required /></label>
+        <label>密码<input id="authPassword" name="password" type="password" autocomplete="current-password" minlength="8" maxlength="128" required aria-describedby="passwordHint" /></label>
+        <p id="passwordHint" class="field-hint">至少 8 位字符。</p>
+        <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
+        <button id="authSubmit" class="primary-button auth-submit" type="submit">登录</button>
+      </form>
+    </dialog>
+    <script src="/auth.js"></script>
+    <script src="/voice-endpoint.js"></script>
+    <script src="/voice-input.js"></script>
+    <script src="/voice-transcript.js"></script>
+    <script src="/voice-corrections.js"></script>
+    <script src="/voice-turns.js"></script>
     <script src="/app.js"></script>
   </body>
 </html>

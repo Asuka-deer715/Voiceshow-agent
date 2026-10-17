@@ -7,6 +7,12 @@ const answerText = document.querySelector("#answerText");
 const thinkingText = document.querySelector("#thinkingText");
 const micButton = document.querySelector("#micButton");
 const voiceStatus = document.querySelector("#voiceStatus");
+const voiceFeedback = document.querySelector("#voiceFeedback");
+const voiceWave = document.querySelector("#voiceWave");
+const voiceModeControl = document.querySelector("#voiceModeControl");
+const voiceCorrection = document.querySelector("#voiceCorrection");
+const voiceCorrectionText = document.querySelector("#voiceCorrectionText");
+const undoVoiceCorrection = document.querySelector("#undoVoiceCorrection");
 const userChat = document.querySelector(".user-chat");
 const recommendationList = document.querySelector("#recommendationList");
 const recommendationCount = document.querySelector("#assistantRecommendationCount");
@@ -22,6 +28,7 @@ const traceList = document.querySelector("#traceList");
 const traceId = document.querySelector("#traceId");
 const metricGrid = document.querySelector("#metricGrid");
 const productDetail = document.querySelector("#productDetail");
+const detailImage = document.querySelector("#detailImage");
 const conversationMessages = document.querySelector("#conversationMessages");
 const detailName = document.querySelector("#detailName");
 const detailDescription = document.querySelector("#detailDescription");
@@ -32,13 +39,33 @@ const sessionList = document.querySelector("#sessionList");
 const newSessionButton = document.querySelector("#newSessionButton");
 
 let latestResponse = "";
+const voiceWaveContext = voiceWave.getContext("2d");
+const voiceWaveLevels = new Array(24).fill(0);
+let voiceWaveFrame = 0;
 let allProducts = [];
 let activeCategory = "全部";
 let sessionId = window.localStorage.getItem("voiceshop_session_id") || null;
-let recognition = null;
 let isListening = false;
+let voicePending = false;
+let voiceInput = null;
+let voiceMode = window.localStorage.getItem("voiceshop_voice_mode") === "edit" ? "edit" : "conversation";
+let lastVoiceCorrection = null;
 let autoVoiceEnabled = window.localStorage.getItem("voiceshop_auto_voice") !== "off";
+let speechToken = 0;
 let progressTimer = null;
+const auth = window.voiceShopAuth;
+const voiceTurns = new window.VoiceShopVoiceTurns({
+  listen: (firstTurn) => {
+    if (!firstTurn) queryInput.value = "";
+    beginVoiceCapture();
+  },
+  answer: () => runAgent({ voiceTurn: true }),
+  speak: (text) => {
+    setVoiceStatus("正在语音回复…", "speaking");
+    return speakText(text);
+  },
+  onChange: updateMicState,
+});
 
 const slotLabels = { category: "商品类别", budget_max: "预算上限", usage_scene: "使用场景", brand_preference: "品牌偏好", must_have: "核心偏好", avoid: "规避条件" };
 const metricLabels = { total_cases: "评测样本", slot_f1: "Slot-F1", recall_at_5: "Recall@5", clarification_accuracy: "澄清准确率" };
@@ -79,16 +106,21 @@ function renderSessionList(sessions = []) {
 }
 
 async function loadSessions() {
-  const data = await (await fetch("/api/sessions")).json();
-  renderSessionList(data.sessions || []);
-  if (sessionId && !data.sessions.some((session) => session.id === sessionId)) {
+  if (!auth.isAuthenticated()) {
+    renderSessionList([]);
+    return;
+  }
+  const data = await (await auth.fetch("/api/sessions")).json();
+  const sessions = Array.isArray(data.sessions) ? data.sessions : [];
+  renderSessionList(sessions);
+  if (sessionId && !sessions.some((session) => session.id === sessionId)) {
     sessionId = null;
     window.localStorage.removeItem("voiceshop_session_id");
   }
 }
 
 async function loadSessionHistory(targetSessionId) {
-  const response = await fetch(`/api/sessions/${encodeURIComponent(targetSessionId)}`);
+  const response = await auth.fetch(`/api/sessions/${encodeURIComponent(targetSessionId)}`);
   if (!response.ok) throw new Error("历史会话加载失败");
   const data = await response.json();
   sessionId = targetSessionId;
@@ -106,7 +138,7 @@ async function loadSessionHistory(targetSessionId) {
 async function deleteSession(targetSessionId) {
   const confirmed = window.confirm("删除后将无法恢复这段会话，确定删除吗？");
   if (!confirmed) return;
-  const response = await fetch("/api/sessions/delete", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ session_id: targetSessionId }) });
+  const response = await auth.fetch("/api/sessions/delete", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ session_id: targetSessionId }) });
   if (!response.ok) throw new Error("历史会话删除失败");
   if (targetSessionId === sessionId) startNewSession();
   await loadSessions();
@@ -182,33 +214,44 @@ function renderCatalog() {
 function showProductDetail(productId) {
   const item = allProducts.find((product) => product.id === Number(productId));
   if (!item) return;
-  if (!productDetail.querySelector("[data-detail-close]")) {
-    productDetail.insertAdjacentHTML("afterbegin", '<button class="detail-close" type="button" data-detail-close aria-label="关闭商品详情">×</button>');
-  }
+  detailImage.src = item.image || "";
+  detailImage.alt = item.name;
+  detailImage.classList.toggle("is-hidden", !item.image);
   detailName.textContent = item.name;
   detailDescription.innerHTML = `<strong>${item.brand} · ${item.category}</strong><br>${item.description}<br><span>适用场景：${(item.scene_tags || []).join("、") || "日常使用"}　|　功能特点：${(item.feature_tags || []).join("、") || "基础功能"}　|　库存：${item.stock} 件</span>`;
   detailPrice.textContent = `${item.price} 元`;
   detailOrderButton.dataset.productId = item.id;
-  productDetail.classList.remove("is-hidden");
-  switchView("catalog");
-  productDetail.scrollIntoView({ behavior: "smooth", block: "center" });
-  fetch("/api/behavior", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ product_id: item.id, event: "view" }) });
+  if (!productDetail.open) productDetail.showModal();
+  if (auth.isAuthenticated()) {
+    auth.fetch("/api/behavior", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ product_id: item.id, event: "view" }) }).catch(() => {});
+  }
+}
+
+function closeProductDetail() {
+  if (productDetail.open) productDetail.close();
 }
 
 async function createOrder(productId) {
-  const response = await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ product_id: Number(productId), session_id: sessionId }) });
+  if (!auth.require(() => createOrder(productId), "登录后才能创建和管理订单。")) return;
+  closeProductDetail();
+  const response = await auth.fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ product_id: Number(productId), session_id: sessionId }) });
   if (!response.ok) throw new Error("订单创建失败");
   await loadOrders();
   switchView("orders");
 }
 
 async function loadOrders() {
-  const data = await (await fetch("/api/orders")).json();
-  orderList.innerHTML = data.orders.length ? data.orders.map((order) => `<article class="order-item"><div><strong>${order.order_no}</strong><span>商品 ID ${order.product_id} · ${order.quantity} 件</span></div><div class="order-actions"><b>${order.status}</b><button type="button" data-order-delete="${order.order_no}">删除订单</button></div></article>`).join("") : "<div class='catalog-empty'>暂时还没有订单</div>";
+  if (!auth.isAuthenticated()) {
+    orderList.innerHTML = "<div class='catalog-empty auth-empty'>登录后即可查看和管理你的订单。<button type='button' data-auth-open>登录 / 注册</button></div>";
+    return;
+  }
+  const data = await (await auth.fetch("/api/orders")).json();
+  const orders = Array.isArray(data.orders) ? data.orders : [];
+  orderList.innerHTML = orders.length ? orders.map((order) => `<article class="order-item"><div><strong>${order.order_no}</strong><span>商品 ID ${order.product_id} · ${order.quantity} 件</span></div><div class="order-actions"><b>${order.status}</b><button type="button" data-order-delete="${order.order_no}">删除订单</button></div></article>`).join("") : "<div class='catalog-empty'>暂时还没有订单</div>";
 }
 
 async function deleteOrder(orderNo) {
-  const response = await fetch("/api/orders/delete", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ order_no: orderNo }) });
+  const response = await auth.fetch("/api/orders/delete", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ order_no: orderNo }) });
   if (!response.ok) throw new Error("订单删除失败");
   await loadOrders();
 }
@@ -315,9 +358,14 @@ function hideLegacyMessagePlaceholders() {
   answerText.classList.add("is-hidden");
 }
 
-async function runAgent() {
+async function runAgent({ voiceTurn = false } = {}) {
+  if (voicePending) {
+    setVoiceStatus("请等待本次转写完成后发送", "finalizing");
+    return;
+  }
   const query = queryInput.value.trim();
   if (!query) return;
+  clearVoiceCorrection();
   runButton.disabled = true;
   hideLegacyMessagePlaceholders();
   appendConversationMessage("user-chat", query);
@@ -332,13 +380,13 @@ async function runAgent() {
   startAgentProgress(query);
   const startedAt = Date.now();
   try {
-    const responsePromise = fetch("/api/recommend", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query, session_id: sessionId }) });
+    const responsePromise = auth.fetch("/api/recommend", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query, session_id: sessionId }) });
     const response = await responsePromise;
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || "推荐失败");
     sessionId = result.session_id || sessionId;
     if (sessionId) window.localStorage.setItem("voiceshop_session_id", sessionId);
-    await new Promise((resolve) => setTimeout(resolve, Math.max(0, 850 - (Date.now() - startedAt))));
+    if (!voiceTurn) await new Promise((resolve) => setTimeout(resolve, Math.max(0, 850 - (Date.now() - startedAt))));
     thinkingText.classList.add("is-hidden");
     answerText.classList.remove("is-hidden");
     thinkingMessage.remove();
@@ -346,8 +394,9 @@ async function runAgent() {
     stopAgentProgress();
     appendConversationMessage("assistant-chat", result.response || "没有返回内容");
     renderResult(result);
-    if (autoVoiceEnabled) speakText(result.response || "没有返回内容");
+    if (!voiceTurn && autoVoiceEnabled) speakText(result.response || "没有返回内容");
     await loadSessions();
+    return result.response || "没有返回内容";
   } catch (error) {
     thinkingText.classList.add("is-hidden");
     answerText.classList.remove("is-hidden");
@@ -358,6 +407,8 @@ async function runAgent() {
     answerTitle.textContent = "暂时无法完成筛选";
     answerText.textContent = error.message;
     renderRecommendations([]);
+    if (voiceTurn) setVoiceStatus("本次回复失败，请重新说一次", "error");
+    return null;
   } finally {
     runButton.disabled = false;
     runButton.innerHTML = "开始筛选 <span>↗</span>";
@@ -373,14 +424,24 @@ function updateVoiceButton() {
 function speakText(text) {
   if (!text || !("speechSynthesis" in window)) {
     setVoiceStatus("当前浏览器不支持语音合成，请使用文字回复");
-    return;
+    return Promise.resolve(false);
   }
-  window.speechSynthesis.cancel();
+  cancelSpeech();
+  const token = speechToken;
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "zh-CN";
   utterance.rate = 1;
   utterance.pitch = 1;
-  window.speechSynthesis.speak(utterance);
+  return new Promise((resolve) => {
+    utterance.onend = () => resolve(token === speechToken);
+    utterance.onerror = () => resolve(false);
+    window.speechSynthesis.speak(utterance);
+  });
+}
+
+function cancelSpeech() {
+  speechToken += 1;
+  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
 }
 
 function speakLatestResponse() {
@@ -391,59 +452,151 @@ function toggleAutoVoice() {
   autoVoiceEnabled = !autoVoiceEnabled;
   window.localStorage.setItem("voiceshop_auto_voice", autoVoiceEnabled ? "on" : "off");
   updateVoiceButton();
-  if (!autoVoiceEnabled && "speechSynthesis" in window) window.speechSynthesis.cancel();
+  if (!autoVoiceEnabled) {
+    voiceTurns.stop();
+    if (isListening) voiceInput?.stop();
+    cancelSpeech();
+  }
   setVoiceStatus(autoVoiceEnabled ? "自动语音回复已开启" : "自动语音回复已关闭");
   if (autoVoiceEnabled) speakLatestResponse();
 }
 
-function setVoiceStatus(message) {
+function setVoiceStatus(message, state) {
   voiceStatus.textContent = message;
+  if (state) voiceFeedback.dataset.state = state;
+  const listening = voiceFeedback.dataset.state === "listening";
+  voiceWave.hidden = !listening;
+  if (!listening) {
+    voiceWaveLevels.fill(0);
+    drawVoiceWave();
+  }
+}
+
+function updateVoiceWave(level) {
+  voiceWaveLevels.shift();
+  voiceWaveLevels.push(Math.min(1, level * 14));
+  if (!voiceWaveFrame) voiceWaveFrame = requestAnimationFrame(drawVoiceWave);
+}
+
+function drawVoiceWave() {
+  voiceWaveFrame = 0;
+  if (!voiceWaveContext || voiceWave.hidden) return;
+  const { width, height } = voiceWave;
+  voiceWaveContext.clearRect(0, 0, width, height);
+  voiceWaveContext.fillStyle = getComputedStyle(voiceFeedback).color;
+  const barWidth = 4;
+  const gap = 4;
+  const totalWidth = voiceWaveLevels.length * (barWidth + gap) - gap;
+  const startX = (width - totalWidth) / 2;
+  voiceWaveLevels.forEach((level, index) => {
+    const barHeight = 4 + level * (height - 8);
+    voiceWaveContext.fillRect(startX + index * (barWidth + gap), (height - barHeight) / 2, barWidth, barHeight);
+  });
+}
+
+function updateMicState(active) {
+  const operation = voiceMode === "edit" ? "语音转写" : "语音对话";
+  micButton.classList.toggle("listening", active);
+  micButton.setAttribute("aria-pressed", String(active));
+  micButton.setAttribute("aria-label", `${active ? "结束" : "开始"}${operation}`);
+  micButton.title = `${active ? "结束" : "开始"}${operation}`;
 }
 
 function toggleVoiceInput() {
-  const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!Recognition) {
-    setVoiceStatus("当前浏览器不支持语音识别，请使用文字输入");
+  if (voiceMode === "edit" && isListening) {
+    voiceInput.stop();
     return;
   }
-  if (isListening) {
-    recognition.stop();
+  if (voiceTurns.active) {
+    voiceTurns.stop();
+    if (isListening) voiceInput?.stop();
+    cancelSpeech();
+    setVoiceStatus("语音对话已结束", "idle");
     return;
   }
+  if (voicePending) {
+    setVoiceStatus("正在完成本次语音识别…");
+    return;
+  }
+  clearVoiceCorrection();
+  if (voiceMode === "edit") {
+    beginVoiceCapture();
+    return;
+  }
+  if (!autoVoiceEnabled) {
+    autoVoiceEnabled = true;
+    window.localStorage.setItem("voiceshop_auto_voice", "on");
+    updateVoiceButton();
+  }
+  voiceTurns.start();
+}
 
-  const originalText = queryInput.value.trim() === "今天我想买个鞋子" ? "" : queryInput.value.trim();
-  recognition = new Recognition();
-  recognition.lang = "zh-CN";
-  recognition.interimResults = true;
-  recognition.continuous = false;
-  recognition.onstart = () => {
-    isListening = true;
-    micButton.classList.add("listening");
-    micButton.setAttribute("aria-pressed", "true");
-    micButton.setAttribute("aria-label", "停止语音输入");
-    setVoiceStatus("正在聆听，请说出你的需求…");
-  };
-  recognition.onresult = (event) => {
-    const transcript = Array.from(event.results).map((result) => result[0].transcript).join("");
-    queryInput.value = [originalText, transcript].filter(Boolean).join("，");
-  };
-  recognition.onerror = (event) => {
-    setVoiceStatus(event.error === "not-allowed" ? "麦克风权限未开启，请允许浏览器使用麦克风" : "没有听清，可以再说一次");
-  };
-  recognition.onend = () => {
-    isListening = false;
-    micButton.classList.remove("listening");
-    micButton.setAttribute("aria-pressed", "false");
-    micButton.setAttribute("aria-label", "开始语音输入");
-    if (queryInput.value.trim()) setVoiceStatus("已识别，可以检查内容后发送");
-  };
-  recognition.start();
+function beginVoiceCapture() {
+  const captureMode = voiceMode;
+  const transcriptBuffer = new window.StreamingTranscriptBuffer(queryInput.value, "今天我想买个鞋子");
+  isListening = true;
+  voicePending = true;
+  updateMicState(true);
+  voiceInput = new window.VoiceShopStreamingInput({
+    onState: (state) => {
+      if (state === "loading_model") setVoiceStatus("正在加载本地语音模型…", state);
+      if (state === "listening") setVoiceStatus("正在聆听，请说出你的需求…", state);
+      if (state === "finalizing") {
+        isListening = false;
+        updateMicState(voiceTurns.active);
+        setVoiceStatus("正在校正并整理识别结果…", state);
+      }
+    },
+    onTranscript: (transcript) => {
+      queryInput.value = transcriptBuffer.apply(transcript, queryInput.value);
+    },
+    onLevel: updateVoiceWave,
+    onFinal: (transcript) => {
+      isListening = false;
+      voicePending = false;
+      if (!transcriptBuffer.manuallyEdited) applyVoiceCorrection(transcriptBuffer, captureMode);
+      updateMicState(voiceTurns.active);
+      if (captureMode === "conversation" && voiceTurns.active && transcript) {
+        setVoiceStatus("正在理解并处理你的需求…", "finalizing");
+        void voiceTurns.complete(queryInput.value);
+      } else {
+        voiceTurns.stop();
+        setVoiceStatus(transcript ? "识别完成，可以检查内容后发送" : "没有听清，可以再说一次", transcript ? "complete" : "idle");
+      }
+    },
+    onError: (message) => {
+      isListening = false;
+      voicePending = false;
+      voiceTurns.stop();
+      updateMicState(false);
+      setVoiceStatus(message, "error");
+    },
+  });
+  voiceInput.start();
+  setVoiceStatus("正在连接本地语音识别…", "connecting");
+}
+
+function clearVoiceCorrection() {
+  lastVoiceCorrection = null;
+  voiceCorrection.hidden = true;
+}
+
+function applyVoiceCorrection(buffer, captureMode) {
+  const result = window.correctVoiceTerms(buffer.transcript, allProducts);
+  if (!result.changes.length) return;
+  const original = queryInput.value;
+  queryInput.value = [buffer.baseText, result.text].filter(Boolean).join("，");
+  lastVoiceCorrection = { original, corrected: queryInput.value };
+  voiceCorrectionText.textContent = `已纠正：${result.changes.map(({ from, to }) => `${from} → ${to}`).join("；")}`;
+  undoVoiceCorrection.hidden = captureMode !== "edit";
+  voiceCorrection.hidden = false;
 }
 
 async function refreshEval() {
   evalButton.disabled = true;
   try {
-    const report = await (await fetch("/api/eval")).json();
+    if (!auth.isAdmin()) return;
+    const report = await (await auth.fetch("/api/eval")).json();
     metricGrid.innerHTML = Object.entries(metricLabels).map(([key, label]) => {
       const raw = report[key];
       const value = typeof raw === "number" && raw <= 1 ? raw.toFixed(4) : raw;
@@ -476,7 +629,9 @@ document.addEventListener("click", (event) => {
   const sessionButton = event.target.closest("[data-session-id]");
   if (sessionButton) loadSessionHistory(sessionButton.dataset.sessionId).catch((error) => { setVoiceStatus(error.message); });
   const detailClose = event.target.closest("[data-detail-close]");
-  if (detailClose || event.target === productDetail) productDetail.classList.add("is-hidden");
+  if (detailClose) closeProductDetail();
+  const authOpenButton = event.target.closest("[data-auth-open]");
+  if (authOpenButton) auth.open("login", "登录后即可查看和管理你的订单。");
   const detailButton = event.target.closest("[data-product-view]");
   const orderButton = event.target.closest("[data-product-order]");
   if (detailButton) showProductDetail(detailButton.dataset.productView);
@@ -485,23 +640,46 @@ document.addEventListener("click", (event) => {
   if (deleteButton) deleteOrder(deleteButton.dataset.orderDelete).catch((error) => { orderList.insertAdjacentHTML("afterbegin", `<div class='catalog-empty'>${error.message}</div>`); });
 });
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") productDetail.classList.add("is-hidden");
+  if (event.key === "Escape") closeProductDetail();
 });
 detailOrderButton.addEventListener("click", () => createOrder(detailOrderButton.dataset.productId));
+productDetail.addEventListener("click", (event) => { if (event.target === productDetail) closeProductDetail(); });
+window.addEventListener("voiceshop:auth-changed", () => {
+  startNewSession();
+  loadOrders();
+});
 
 runButton.addEventListener("click", runAgent);
 newSessionButton.addEventListener("click", startNewSession);
 speakButton.addEventListener("click", toggleAutoVoice);
 micButton.addEventListener("click", toggleVoiceInput);
+voiceModeControl.addEventListener("change", (event) => {
+  voiceMode = event.target.value;
+  window.localStorage.setItem("voiceshop_voice_mode", voiceMode);
+  voiceTurns.stop();
+  if (isListening) voiceInput?.stop();
+  cancelSpeech();
+  clearVoiceCorrection();
+  updateMicState(isListening);
+  setVoiceStatus(voiceMode === "edit" ? "转写完成后可修改文字，再点击发送" : "语音对话已就绪", "idle");
+});
+undoVoiceCorrection.addEventListener("click", () => {
+  if (lastVoiceCorrection && queryInput.value === lastVoiceCorrection.corrected) queryInput.value = lastVoiceCorrection.original;
+  clearVoiceCorrection();
+  queryInput.focus();
+});
+queryInput.addEventListener("input", clearVoiceCorrection);
 evalButton.addEventListener("click", refreshEval);
 queryInput.addEventListener("keydown", (event) => { if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) runAgent(); });
 
 const initialView = window.location.hash.slice(1);
 if (["dialogue", "catalog", "scenes", "orders"].includes(initialView)) switchView(initialView);
 updateVoiceButton();
+voiceModeControl.querySelector(`input[value="${voiceMode}"]`).checked = true;
+updateMicState(false);
 loadCatalog();
 loadOrders();
-refreshEval();
+if (auth.isAdmin()) refreshEval();
 loadSessions().then(() => {
   if (sessionId) loadSessionHistory(sessionId).catch(() => startNewSession());
 });

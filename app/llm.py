@@ -49,6 +49,11 @@ def _model(primary: bool = True) -> str:
     return config(key, "deepseek-chat" if primary else "deepseek-reasoner")
 
 
+def _supports_json_schema(model: str) -> bool:
+    endpoint = config("OPENAI_BASE_URL", "https://api.openai.com/v1").lower()
+    return "deepseek" not in endpoint and not model.lower().startswith("deepseek")
+
+
 def _request(messages: list[dict[str, str]], *, node: str, trace_id: str = "", schema: dict[str, Any] | None = None, temperature: float = 0, primary: bool = True) -> dict[str, Any] | None:
     if not configured():
         return None
@@ -58,7 +63,7 @@ def _request(messages: list[dict[str, str]], *, node: str, trace_id: str = "", s
     payload: dict[str, Any] = {"model": _model(primary), "temperature": temperature, "messages": request_messages}
     use_tools = node == "intent_classification" and config("LLM_ENABLE_TOOL_CALLING", "0") == "1"
     if schema and not use_tools:
-        payload["response_format"] = {"type": "json_schema", "json_schema": {"name": f"{node}_result", "strict": True, "schema": schema}}
+        payload["response_format"] = {"type": "json_schema", "json_schema": {"name": f"{node}_result", "strict": True, "schema": schema}} if _supports_json_schema(payload["model"]) else {"type": "json_object"}
     elif node == "intent_classification":
         payload["response_format"] = {"type": "json_object"}
     if use_tools:
@@ -94,7 +99,8 @@ def _request(messages: list[dict[str, str]], *, node: str, trace_id: str = "", s
 
 
 def classify_intent(query: str, context: str = "", trace_id: str = "") -> dict[str, Any] | None:
-    cache_query = f"{config('LLM_MODEL')}|{context}|{query}"
+    _, intent_version = get_prompt("intent")
+    cache_query = f"{intent_version}|{config('LLM_MODEL')}|{context}|{query}"
     cached = cache_get("intent", cache_query)
     if cached:
         return cached

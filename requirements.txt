@@ -3,3 +3,9 @@ pydantic>=2.7,<3
 redis==5.0.8
 SQLAlchemy==2.0.25
 alembic==1.13.3
+funasr==1.4.16
+modelscope==1.40.2
+websockets==17.2
+psycopg[binary]==3.3.6
+pgvector==0.5.1
+transformers==4.46.3

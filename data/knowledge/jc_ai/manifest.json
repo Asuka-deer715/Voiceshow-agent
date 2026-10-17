@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "collection": "jc_ai",
+  "imported_at": "2026-10-17T09:48:44.698497+00:00",
+  "document_count": 5,
+  "chunk_count": 72,
+  "documents": [
+    {
+      "source": "hr-handbook.md",
+      "sha256": "b97db4d68523c39b28424e1aa7f4bd337f399f1c41500a034bcdc7d00dbf51ca",
+      "bytes": 254,
+      "pages": null,
+      "empty_pages": [],
+      "chunks": 1
+    },
+    {
+      "source": "hr-handbook.txt",
+      "sha256": "b1906f18b61f35591063367eadf60e06bac34d043822dd44f22f1d661f2e8913",
+      "bytes": 2582,
+      "pages": null,
+      "empty_pages": [],
+      "chunks": 12
+    },
+    {
+      "source": "policy.pdf",
+      "sha256": "c9d7139ebac99ddcdf2d649c011e2a6d569d7ef523a188988130b03cc5715335",
+      "bytes": 104007,
+      "pages": 11,
+      "empty_pages": [],
+      "chunks": 40
+    },
+    {
+      "source": "product-faq.txt",
+      "sha256": "429fdb4dcd5cbf12c687f75be49eb404123595b251860b0ec2e2fc43ad4084f8",
+      "bytes": 2327,
+      "pages": null,
+      "empty_pages": [],
+      "chunks": 7
+    },
+    {
+      "source": "tech-spec.txt",
+      "sha256": "d7942ea33561bdaa3bd99eb7fa9790b740cc7e2d12ab9bb2bd20f8036d14627e",
+      "bytes": 3483,
+      "pages": null,
+      "empty_pages": [],
+      "chunks": 12
+    }
+  ]
+}

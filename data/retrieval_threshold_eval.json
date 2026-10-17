@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "purpose": "Calibrate the RAG no-relevant-result threshold against the current indexed knowledge corpus.",
+  "decision_rule": "A case is answerable only when the retrieved context contains evidence sufficient to answer the query. Similar topic alone is not evidence.",
+  "score_field": "cosine_similarity",
+  "cases": [
+    {
+      "id": "return_window_paraphrase",
+      "query": "签收以后几天内还能申请退货？",
+      "should_answer": true,
+      "expected_chunk_ids": ["after_sales-2"],
+      "type": "paraphrase"
+    },
+    {
+      "id": "return_condition_used_item",
+      "query": "商品拆开用过了，还能不能退？",
+      "should_answer": true,
+      "expected_chunk_ids": ["after_sales-2"],
+      "type": "detail_lookup"
+    },
+    {
+      "id": "exchange_quality_issue",
+      "query": "收到的东西有质量问题，换货要怎么操作？",
+      "should_answer": true,
+      "expected_chunk_ids": ["after_sales-3"],
+      "type": "paraphrase"
+    },
+    {
+      "id": "support_review_sla",
+      "query": "售后提交之后一般多久能审核？",
+      "should_answer": true,
+      "expected_chunk_ids": ["after_sales-4"],
+      "type": "detail_lookup"
+    },
+    {
+      "id": "shipping_dispatch_time",
+      "query": "现货下单后什么时候发出？",
+      "should_answer": true,
+      "expected_chunk_ids": ["shipping-2"],
+      "type": "paraphrase"
+    },
+    {
+      "id": "shipping_remote_area",
+      "query": "偏远地区能配送吗，时效会不会更久？",
+      "should_answer": true,
+      "expected_chunk_ids": ["shipping-3"],
+      "type": "detail_lookup"
+    },
+    {
+      "id": "tracking_after_dispatch",
+      "query": "已经发货了，在哪里找物流单号？",
+      "should_answer": true,
+      "expected_chunk_ids": ["shipping-4"],
+      "type": "paraphrase"
+    },
+    {
+      "id": "demo_inventory_scope",
+      "query": "页面上显示的库存是真实库存吗？",
+      "should_answer": true,
+      "expected_chunk_ids": ["product_service-2"],
+      "type": "detail_lookup"
+    },
+    {
+      "id": "cancel_unpaid_order",
+      "query": "订单还没付款，可以取消吗？",
+      "should_answer": true,
+      "expected_chunk_ids": ["product_service-3"],
+      "type": "detail_lookup"
+    },
+    {
+      "id": "faq_free_plan_quota",
+      "query": "免费版每天可以问多少次，文档和空间分别有多少？",
+      "should_answer": true,
+      "expected_chunk_ids": ["jc_ai:product-faq.txt:429fdb4dcd5c:3"],
+      "type": "multi_fact"
+    },
+    {
+      "id": "faq_api_rate_limit",
+      "query": "免费用户的 API 每分钟最多调用几次？",
+      "should_answer": true,
+      "expected_chunk_ids": ["jc_ai:product-faq.txt:429fdb4dcd5c:4"],
+      "type": "detail_lookup"
+    },
+    {
+      "id": "faq_supported_documents",
+      "query": "知识库能上传 PDF 和 Word 吗？单个文件有大小限制吗？",
+      "should_answer": true,
+      "expected_chunk_ids": ["jc_ai:product-faq.txt:429fdb4dcd5c:6"],
+      "type": "multi_fact"
+    },
+    {
+      "id": "tech_commit_message",
+      "query": "提交代码时 commit message 要遵循什么格式？",
+      "should_answer": true,
+      "expected_chunk_ids": ["jc_ai:tech-spec.txt:d7942ea33561:2"],
+      "type": "paraphrase"
+    },
+    {
+      "id": "tech_rest_url",
+      "query": "接口 URL 使用名词复数的规范是什么，为什么不能写 /api/getUser？",
+      "should_answer": true,
+      "expected_chunk_ids": ["jc_ai:tech-spec.txt:d7942ea33561:4"],
+      "type": "multi_fact"
+    },
+    {
+      "id": "tech_ai_rate_limit",
+      "query": "规范里 AI 大模型接口每个用户一分钟最多几次？",
+      "should_answer": true,
+      "expected_chunk_ids": ["jc_ai:tech-spec.txt:d7942ea33561:6"],
+      "type": "detail_lookup"
+    },
+    {
+      "id": "tech_sensitive_operation_auth",
+      "query": "删除和支付这类敏感操作需要额外验证吗？",
+      "should_answer": true,
+      "expected_chunk_ids": ["jc_ai:tech-spec.txt:d7942ea33561:10"],
+      "type": "paraphrase"
+    },
+    {
+      "id": "hr_remote_work_days",
+      "query": "员工一个月最多能申请几天远程办公？",
+      "should_answer": true,
+      "expected_chunk_ids": ["jc_ai:policy.pdf:c9d7139ebac9:16"],
+      "type": "detail_lookup"
+    },
+    {
+      "id": "hr_annual_leave_submit",
+      "query": "年假要提前多久申请，在哪里提交？",
+      "should_answer": true,
+      "expected_chunk_ids": ["jc_ai:hr-handbook.txt:b1906f18b61f:5"],
+      "type": "multi_fact"
+    },
+    {
+      "id": "hr_overtime_approval",
+      "query": "加班要先审批吗，工作日加班怎么补偿？",
+      "should_answer": true,
+      "expected_chunk_ids": ["jc_ai:policy.pdf:c9d7139ebac9:18"],
+      "type": "multi_fact"
+    },
+    {
+      "id": "hr_probation_duration",
+      "query": "不同职级的试用期分别是多久？",
+      "should_answer": true,
+      "expected_chunk_ids": ["jc_ai:policy.pdf:c9d7139ebac9:7"],
+      "type": "multi_fact"
+    },
+    {
+      "id": "unknown_product_warranty",
+      "query": "这双跑鞋的质保期是多久？",
+      "should_answer": false,
+      "expected_chunk_ids": [],
+      "type": "near_miss"
+    },
+    {
+      "id": "unknown_return_pickup_fee",
+      "query": "退货上门取件要收费吗，运费由谁承担？",
+      "should_answer": false,
+      "expected_chunk_ids": [],
+      "type": "near_miss"
+    },
+    {
+      "id": "unknown_exchange_color",
+      "query": "可以换成另一个颜色吗，补差价怎么处理？",
+      "should_answer": false,
+      "expected_chunk_ids": [],
+      "type": "near_miss"
+    },
+    {
+      "id": "unknown_paid_order_cancel",
+      "query": "订单已经付款但还没发货，现在取消后多久到账？",
+      "should_answer": false,
+      "expected_chunk_ids": [],
+      "type": "near_miss"
+    },
+    {
+      "id": "unknown_exact_delivery_eta",
+      "query": "我这个订单今天能不能送到杭州？",
+      "should_answer": false,
+      "expected_chunk_ids": [],
+      "type": "near_miss"
+    },
+    {
+      "id": "unknown_payment_methods",
+      "query": "这个商城支持信用卡分期和哪些支付方式？",
+      "should_answer": false,
+      "expected_chunk_ids": [],
+      "type": "near_miss"
+    },
+    {
+      "id": "unknown_coupon_stack",
+      "query": "跑鞋优惠券可以和满减活动叠加使用吗？",
+      "should_answer": false,
+      "expected_chunk_ids": [],
+      "type": "near_miss"
+    },
+    {
+      "id": "unknown_invoice_policy",
+      "query": "买耳机能开公司抬头的增值税专用发票吗？",
+      "should_answer": false,
+      "expected_chunk_ids": [],
+      "type": "near_miss"
+    },
+    {
+      "id": "unknown_remote_work_expense",
+      "query": "远程办公产生的宽带费用可以报销吗？",
+      "should_answer": false,
+      "expected_chunk_ids": [],
+      "type": "near_miss"
+    },
+    {
+      "id": "unknown_faq_enterprise_seats",
+      "query": "专业版最多支持多少个企业子账号同时登录？",
+      "should_answer": false,
+      "expected_chunk_ids": [],
+      "type": "near_miss"
+    },
+    {
+      "id": "unknown_product_launch_date",
+      "query": "Sony WH-1000XM5 是哪一年发布的？",
+      "should_answer": false,
+      "expected_chunk_ids": [],
+      "type": "near_miss"
+    },
+    {
+      "id": "unknown_specific_order_status",
+      "query": "帮我查一下订单 20261017001 到哪里了。",
+      "should_answer": false,
+      "expected_chunk_ids": [],
+      "type": "near_miss"
+    },
+    {
+      "id": "out_of_scope_recipe",
+      "query": "番茄炒蛋怎么做？",
+      "should_answer": false,
+      "expected_chunk_ids": [],
+      "type": "out_of_scope"
+    },
+    {
+      "id": "out_of_scope_weather",
+      "query": "明天上海天气怎么样？",
+      "should_answer": false,
+      "expected_chunk_ids": [],
+      "type": "out_of_scope"
+    },
+    {
+      "id": "out_of_scope_code_generation",
+      "query": "用 Python 写一个快速排序函数。",
+      "should_answer": false,
+      "expected_chunk_ids": [],
+      "type": "out_of_scope"
+    }
+  ]
+}

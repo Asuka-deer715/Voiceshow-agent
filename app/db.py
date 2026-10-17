@@ -8,6 +8,7 @@ from sqlalchemy import text
 
 from .database import init_database, read_session, write_session
 from . import db_monitor  # noqa: F401 - registers SQLAlchemy query listeners
+from .security.guard import redact_pii
 
 
 def init_db() -> None:
@@ -15,14 +16,16 @@ def init_db() -> None:
     init_database()
 
 
-def get_session(session_id: str) -> dict[str, Any]:
+def get_session(session_id: str, user_id: int = 1) -> dict[str, Any]:
     with read_session() as session:
         row = session.execute(text("SELECT * FROM sessions WHERE id = :id"), {"id": session_id}).mappings().first()
     if row:
+        if int(row["user_id"]) != int(user_id):
+            raise PermissionError("SESSION_FORBIDDEN")
         return {"id": row["id"], "user_id": row["user_id"], "slots": json.loads(row["slots_json"]), "phase": row["phase"]}
     with write_session() as session:
-        session.execute(text("INSERT OR IGNORE INTO sessions(id, user_id) VALUES (:id, 1)"), {"id": session_id})
-    return {"id": session_id, "user_id": 1, "slots": {}, "phase": "INTENT"}
+        session.execute(text("INSERT INTO sessions(id, user_id) VALUES (:id, :user_id) ON CONFLICT (id) DO NOTHING"), {"id": session_id, "user_id": user_id})
+    return {"id": session_id, "user_id": user_id, "slots": {}, "phase": "INTENT"}
 
 
 def save_session(session_id: str, slots: dict[str, Any], phase: str) -> None:
@@ -39,7 +42,7 @@ def append_message(session_id: str, role: str, content: str) -> None:
 def recent_messages(session_id: str, limit: int = 6) -> list[dict[str, Any]]:
     with read_session() as session:
         rows = session.execute(text("SELECT role, content, created_at FROM messages WHERE session_id = :id ORDER BY id DESC LIMIT :limit"), {"id": session_id, "limit": limit}).mappings().all()
-        return [dict(row) for row in reversed(rows)]
+        return [{**dict(row), "content": redact_pii(dict(row)["content"])} for row in reversed(rows)]
 
 
 def list_sessions(user_id: int = 1) -> list[dict[str, Any]]:
@@ -50,16 +53,16 @@ def list_sessions(user_id: int = 1) -> list[dict[str, Any]]:
         FROM sessions
         WHERE sessions.user_id = :user_id
           AND EXISTS (SELECT 1 FROM messages WHERE session_id = sessions.id)
-        ORDER BY datetime(sessions.updated_at) DESC LIMIT 50
+        ORDER BY sessions.updated_at DESC LIMIT 50
     """)
     with read_session() as session:
-        return [dict(row) for row in session.execute(query, {"user_id": user_id}).mappings().all()]
+        return [{**dict(row), "title": redact_pii(dict(row)["title"] or "")} for row in session.execute(query, {"user_id": user_id}).mappings().all()]
 
 
 def list_messages(session_id: str) -> list[dict[str, Any]]:
     with read_session() as session:
         rows = session.execute(text("SELECT role, content, created_at FROM messages WHERE session_id = :id ORDER BY id"), {"id": session_id}).mappings().all()
-        return [dict(row) for row in rows]
+        return [{**dict(row), "content": redact_pii(dict(row)["content"])} for row in rows]
 
 
 def delete_session(session_id: str, user_id: int = 1) -> bool:

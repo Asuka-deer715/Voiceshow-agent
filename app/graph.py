@@ -30,6 +30,12 @@ HEADPHONE = "\u8033\u673a"
 WATCH = "\u624b\u8868"
 LIPSTICK = "\u53e3\u7ea2"
 SUPPORTED_CATEGORIES = {RUN_SHOE, HEADPHONE, WATCH, LIPSTICK}
+RUN_SHOE_TERMS = (RUN_SHOE, "\u8dd1\u6b65\u978b", "\u6162\u8dd1\u978b", "\u9a6c\u62c9\u677e\u978b", "\u8d8a\u91ce\u8dd1\u978b")
+GENERIC_SHOE_TERMS = {"\u978b", "\u978b\u5b50"}
+UNSUPPORTED_CATEGORIES = ("\u6c34\u679c", "\u4e66", "\u7535\u8111", "\u5bb6\u5177", "\u670d\u88c5")
+CATEGORY_QUERY_PREFIX = re.compile(
+    r"^(?:(?:\u6709\u6ca1\u6709|\u662f\u5426\u6709|\u80fd\u4e0d\u80fd\u63a8\u8350|\u8bf7\u5e2e\u6211|\u6211\u60f3\u4e70|\u6211\u8981\u4e70|\u5e2e\u6211|\u7ed9\u6211|\u4f60\u4eec|\u4f60\u5bb6|\u8fd9\u91cc|\u5e97\u91cc|\u5546\u57ce|\u8bf7\u95ee|\u9ebb\u70e6|\u6709\u65e0|\u60f3\u4e70|\u8981\u4e70|\u60f3\u8981|\u63a8\u8350|\u627e\u627e|\u627e|\u6709|\u4e70|\u6765)\s*)+"
+)
 
 
 def load_products() -> list[dict[str, Any]]:
@@ -44,19 +50,28 @@ def empty_slots() -> dict[str, Any]:
     return {"category": None, "budget_max": None, "usage_scene": None, "brand_preference": None, "must_have": [], "avoid": []}
 
 
-def extract_slots(text: str) -> dict[str, Any]:
+def supported_category_from_text(text: str) -> str | None:
     query = normalize_query(text)
-    slots = empty_slots()
     category_map = {
-        RUN_SHOE: [RUN_SHOE, "\u8dd1\u6b65\u978b", "\u8fd0\u52a8\u978b", "\u978b\u5b50", "\u978b"],
-        HEADPHONE: [HEADPHONE, "\u964d\u566a", "\u84dd\u7259"],
-        WATCH: [WATCH, "\u8155\u8868", "\u673a\u68b0\u8868"],
+        HEADPHONE: [HEADPHONE, "\u964d\u566a\u8033\u673a", "\u84dd\u7259\u8033\u673a"],
+        WATCH: [WATCH, "\u8155\u8868", "\u673a\u68b0\u8868", "\u8fd0\u52a8\u624b\u8868"],
         LIPSTICK: [LIPSTICK, "\u5507\u818f"],
     }
     for category, keywords in category_map.items():
         if any(keyword in query for keyword in keywords):
-            slots["category"] = category
-            break
+            return category
+    if any(term in query for term in RUN_SHOE_TERMS):
+        return RUN_SHOE
+    if any(scene in query for scene in ("\u8dd1\u6b65", "\u6162\u8dd1", "\u9a6c\u62c9\u677e")) and "\u978b" in query:
+        return RUN_SHOE
+    return None
+
+
+def extract_slots(text: str) -> dict[str, Any]:
+    query = normalize_query(text)
+    slots = empty_slots()
+    if not unsupported_category_from_text(query):
+        slots["category"] = supported_category_from_text(query)
     budget_match = re.search(r"(\d{2,5})\s*(?:\u5143|\u5757|\u9884\u7b97|\u4ee5\u4e0b)?", query)
     if budget_match:
         slots["budget_max"] = int(budget_match.group(1))
@@ -123,10 +138,30 @@ def unsupported_category(model_intent: dict[str, Any] | None) -> str | None:
 
 
 def unsupported_category_from_text(text: str) -> str | None:
-    for category in ["\u6c34\u679c", "\u4e66", "\u7535\u8111", "\u5bb6\u5177", "\u670d\u88c5"]:
-        if category in text:
+    query = normalize_query(text).strip()
+    for category in UNSUPPORTED_CATEGORIES:
+        if category in query:
             return category
+    candidate_text = re.sub(r"[\u5417\u4e48\u5462\u5440\u554a\uff1f?!\uff01\u3002]+$", "", query)
+    previous = None
+    while previous != candidate_text:
+        previous = candidate_text
+        candidate_text = CATEGORY_QUERY_PREFIX.sub("", candidate_text).strip()
+    candidate_text = re.sub(r"^(?:\u4e00\u53cc|\u53cc|\u4e00\u6b3e|\u6b3e|\u4e00\u7c7b|\u7c7b|\u4e2a)", "", candidate_text)
+    matches = re.findall(r"[A-Za-z0-9\u4e00-\u9fff]{1,12}(?:\u978b\u5b50|\u9774\u5b50|\u978b|\u9774)", candidate_text)
+    if matches:
+        candidate = matches[-1].rsplit("\u7684", 1)[-1]
+        if candidate in GENERIC_SHOE_TERMS or any(term in candidate for term in RUN_SHOE_TERMS):
+            return None
+        if any(scene in candidate for scene in ("\u8dd1\u6b65", "\u6162\u8dd1", "\u9a6c\u62c9\u677e")):
+            return None
+        return candidate
     return None
+
+
+def is_availability_query(text: str) -> bool:
+    query = text.strip()
+    return any(keyword in query for keyword in ["\u6709\u6ca1\u6709", "\u662f\u5426\u6709", "\u6709\u5417", "\u6709\u65e0"]) or bool(re.search(r"(?:^|\u8bf7\u95ee)\u6709.{1,20}[\u5417\u4e48\uff1f?]?$", query))
 
 
 def select_intent(model_intent: dict[str, Any] | None, text: str) -> tuple[str, str, str | None]:
@@ -202,6 +237,20 @@ def retrieve_products(slots: dict[str, Any], products: list[dict[str, Any]]) -> 
 
 
 def is_knowledge_query(text: str) -> bool:
+    document_terms = (
+        "员工手册", "试用期", "入职", "年假", "请假", "远程办公", "绩效", "学习基金",
+        "福利", "技术规范", "代码规范", "接口规范", "限流", "知识库", "免费版", "付费版",
+        "专业版", "套餐", "api", "提交规范", "分支策略", "代码审查", "五险一金",
+    )
+    if any(term in text.lower() for term in document_terms):
+        return True
+    document_terms = (
+        "员工手册", "试用期", "入职", "年假", "请假", "远程办公", "绩效", "学习基金",
+        "福利", "技术规范", "代码规范", "接口规范", "限流", "知识库", "免费版", "付费版",
+        "专业版", "套餐", "api", "提交规范", "分支策略", "代码审查", "五险一金",
+    )
+    if any(term in text.lower() for term in document_terms):
+        return True
     return any(keyword in text for keyword in ["\u9000\u8d27", "\u9000\u6b3e", "\u6362\u8d27", "\u552e\u540e", "\u53d1\u8d27", "\u7269\u6d41", "\u5feb\u9012", "\u4fdd\u4fee", "\u8ba2\u5355\u53d6\u6d88", "\u5bc4\u56de", "\u591a\u4e45"])
 
 
@@ -222,11 +271,15 @@ def fallback_intent(text: str) -> str:
         return "greeting"
     if any(keyword in text for keyword in ["\u8fc7\u5f80\u8ba2\u5355", "\u5386\u53f2\u8ba2\u5355", "\u4e0b\u5355\u5546\u54c1", "\u4e70\u8fc7\u4ec0\u4e48", "\u8d2d\u4e70\u8bb0\u5f55"]):
         return "order_history_query"
+    if is_knowledge_query(text):
+        return "knowledge_query"
+    if is_knowledge_query(text):
+        return "knowledge_query"
     if is_price_query(text):
         return "product_price_query"
     if any(keyword in text for keyword in ["\u4e0d\u60f3\u8981", "\u4e0d\u8981", "\u6362\u4e00\u79cd", "\u6392\u9664", "\u522b\u63a8\u8350"]):
         return "change_preference"
-    if any(keyword in text for keyword in ["\u6709\u6ca1\u6709", "\u662f\u5426\u6709", "\u6709\u5417", "\u6709\u65e0"]):
+    if is_availability_query(text):
         return "product_availability_query"
     if is_knowledge_query(text):
         return "knowledge_query"
@@ -235,6 +288,10 @@ def fallback_intent(text: str) -> str:
 
 def _route_after_validation(state: AgentState) -> str:
     return "persist_result" if state.get("response") else "extract_slots"
+
+
+def _route_after_load_context(state: AgentState) -> str:
+    return "persist_result" if state.get("status") == "blocked" else "classify_intent"
 
 
 def _route_after_slots(state: AgentState) -> str:
@@ -256,7 +313,7 @@ def build_agent_graph():
     builder.add_node("generate_response", generate_response)
     builder.add_node("persist_result", persist_result)
     builder.add_edge(START, "load_context")
-    builder.add_edge("load_context", "classify_intent")
+    builder.add_conditional_edges("load_context", _route_after_load_context)
     builder.add_edge("classify_intent", "validate_intent")
     builder.add_conditional_edges("validate_intent", _route_after_validation)
     builder.add_conditional_edges("extract_slots", _route_after_slots)
@@ -270,11 +327,12 @@ def build_agent_graph():
 agent_graph = build_agent_graph()
 
 
-def run_agent(user_input: str, session_id: str | None = None, user_id: int = 1) -> dict[str, Any]:
+def run_agent(user_input: str, session_id: str | None = None, user_id: int = 1, authenticated: bool = False) -> dict[str, Any]:
     state: AgentState = {
         "query": user_input,
         "session_id": session_id or str(uuid.uuid4()),
         "user_id": user_id,
+        "authenticated": authenticated,
         "trace_id": str(uuid.uuid4()),
         "trace": [],
         "llm_used": False,

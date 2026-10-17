@@ -1,215 +1,119 @@
 # VoiceShop AI
 
-基于 Python 与 LangGraph 构建的 AI 语音导购系统，面向商品咨询、智能推荐、知识问答与订单服务等购物场景。
+[简体中文](README.md) | [English](README_EN.md)
 
-## 项目定位
-
-VoiceShop AI 面向在线购物中的自然语言导购场景。用户可以通过文字或语音描述商品需求，系统结合对话上下文、商品资料、预算、使用场景和历史行为，完成需求理解、商品筛选、推荐解释、知识问答和订单服务。
-
-系统将大模型的自然语言理解能力与结构化业务工具结合：模型负责判断用户当前意图和对话状态，工具负责商品查询、订单查询、知识检索等确定性操作，避免仅依赖固定关键词或直接生成未经验证的答案。
+基于 Python、LangGraph、DeepSeek 和本地语音识别构建的智能导购系统。用户可以通过文字或语音表达购物需求，系统结合多轮上下文、商品目录、知识检索和业务工具完成商品推荐、售后问答及订单服务。
 
 ## 页面展示
 
-VoiceShop 提供面向用户的 AI 语音导购入口，支持多轮需求表达、商品推荐理由展示、语音输入和商品目录浏览。
-
-![VoiceShop AI 商品目录](docs/images/voiceshop-dialogue.png)
+![VoiceShop AI 商品目录与对话界面](docs/images/voiceshop-dialogue.png)
 
 ## 核心能力
 
-- 基于 LangGraph 编排多轮购物对话，支持意图识别、上下文理解、槽位提取与澄清
-- 结合大模型判断用户主要意图，并通过结构化工具完成商品检索、价格查询、订单查询和偏好调整
-- 支持商品目录、商品详情、浏览行为、购物车式订单创建与订单管理
-- 支持产品手册、配送政策、售后规则等知识内容的解析、检索、答案生成与来源引用
-- 支持多角度商品推荐、预算和场景匹配，以及推荐结果的解释生成
-- 支持用户画像、购买行为、会话消息、FAQ、订单和 Trace 数据持久化
-- 支持浏览器语音输入与语音回复，提供自然语言导购交互
-- 支持离线问答评测、召回质量评估、工具调用记录和流程审计
-- 对超出结构化业务流程的问题调用兼容 OpenAI API 的大模型进行处理
+- LangGraph 状态图编排多轮对话、模型意图识别、规则槽位抽取、澄清与工具执行
+- 商品目录、商品详情、预算过滤、推荐理由、浏览行为及订单记录
+- 基于 BGE-small-zh-v1.5 的中文文本向量化和语义检索，答案关联原始来源
+- PostgreSQL 持久化业务数据，pgvector 存储 512 维向量并使用 HNSW 做余弦距离检索
+- FunASR Paraformer Streaming 流式语音识别，浏览器语音合成回复
+- 模型调用 Trace、token/延迟/成本记录、版本化 Prompt、输入输出安全检查
+- 离线对话评测与独立 RAG 拒答阈值评测集
 
-## 核心交互流程
+## 对话流程
 
 ```text
-用户输入文字/语音
-        |
-        v
-会话状态加载 -> 意图识别 -> 槽位提取与上下文合并
-        |
-        +--> 信息不足：生成澄清问题
-        |
-        +--> 商品需求：检索商品 -> 条件过滤 -> 多角度推荐 -> 解释原因
-        |
-        +--> 知识问题：检索知识库 -> 组装证据 -> 生成带来源答案
-        |
-        +--> 订单问题：调用订单工具 -> 校验用户权限 -> 返回订单信息
-        |
-        v
-输入/输出合规检查 -> 保存会话、行为和 Trace -> 返回结果
+语音或文字输入
+  -> 加载会话上下文
+  -> 模型判断主要意图 + 规则抽取槽位
+  -> 结构化校验与业务约束
+  -> 商品检索 / pgvector 知识检索 / 订单工具
+  -> 证据约束回答与来源引用
+  -> 保存消息、行为、模型调用与 Trace
 ```
-
-### 意图识别与多轮上下文
-
-意图识别由模型结合最近对话历史完成，规则层负责价格、品类、品牌、场景和否定偏好等槽位提取与业务校验。例如用户先说“我想买鞋子”，再说“预算 500 以内”，系统会将后续预算合并到原有商品需求中，而不是重新开始一轮对话。
-
-### 商品推荐
-
-商品推荐同时考虑语义相关度、预算范围、商品类别、使用场景、库存状态和用户偏好。推荐流程保留价格、场景、品质和多样性等不同评价视角，最终由聚合器生成排序结果和推荐理由。
-
-### RAG 知识问答
-
-知识库支持产品服务说明、配送政策和售后规则等内容。文档经过解析、清洗、切分和检索后，作为模型回答的上下文；回答同时保留来源文件和证据片段，降低脱离资料生成错误政策的风险。
-
-### 订单与行为服务
-
-系统记录用户的会话、商品浏览、推荐点击和订单信息，为订单查询、用户画像和后续推荐提供数据基础。订单相关操作通过结构化工具执行，并预留状态校验、权限检查和操作审计接口。
-
-## Architecture
-
-```text
-app/
-├── agent/          # 意图、澄清、情绪、推荐与多视角 Agent
-├── compliance/     # 输入输出安全与证据校验
-├── config/         # 模型、数据库、缓存和向量服务配置
-├── controller/     # 对话、商品、订单和语音接口
-├── dto/             # 请求、响应和 Agent 结果结构
-├── entity/          # 用户、商品、订单、会话和知识实体
-├── event/           # 用户行为、订单和 Trace 领域事件
-├── listener/        # 异步画像、审计和事件处理
-├── memory/          # 会话记忆、摘要和 Agent 记忆策略
-├── repository/      # 商品、订单、知识库和向量数据访问
-├── security/        # 登录认证、JWT 和资源权限校验
-├── service/         # 对话编排、推荐、订单和知识服务
-└── voice/           # ASR/TTS 流式通信
-```
-
-系统以 LangGraph 作为流程编排层，将意图识别、槽位更新、知识检索、商品工具、推荐聚合、合规检查和 Trace 记录组织为可追踪的状态流转。
-
-## 数据与知识库
-
-```text
-data/
-├── products.json                 # 商品目录、价格、库存和标签
-├── eval_cases.json              # 离线评测样例
-└── knowledge/
-    ├── after_sales.md           # 售后与退换货知识
-    ├── shipping.md              # 配送与物流知识
-    └── product_service.md       # 商品服务与使用说明
-```
-
-知识检索接口：
-
-```text
-GET /api/rag/search?q=退换货规则
-```
-
-返回内容包含匹配文本、来源文件和相关度信息，可用于前端展示来源，也可作为后续模型回答的上下文。
-
-## 主要接口
-
-| 接口 | 作用 |
-| --- | --- |
-| `POST /api/recommend` | 提交用户需求并获取对话回复与推荐结果 |
-| `GET /api/products` | 查询商品目录 |
-| `GET /api/products/{id}` | 查看商品详情 |
-| `POST /api/behavior` | 记录商品浏览、点击等行为 |
-| `GET /api/orders` | 查询当前订单列表 |
-| `POST /api/orders` | 创建订单记录 |
-| `POST /api/orders/delete` | 删除订单记录 |
-| `GET /api/faq` | 查询常见问题 |
-| `GET /api/rag/search` | 检索知识库并返回来源 |
-| `GET /api/eval` | 执行基础离线评测 |
 
 ## 技术栈
 
-- **应用层**：Python、FastAPI
-- **流程编排**：LangGraph
-- **模型调用**：OpenAI-compatible API、DeepSeek
-- **数据校验**：Pydantic
-- **检索增强**：RAG、文本切分、相似度检索、来源引用
-- **持久化**：SQLite，预留 PostgreSQL、Redis 和向量数据库适配层
-- **语音交互**：Browser Speech Recognition、Browser Speech Synthesis
-- **评测与观测**：离线评测集、Trace 记录、工具调用审计
+Python、LangGraph、SQLAlchemy、Alembic、PostgreSQL、pgvector、Pydantic、DeepSeek API、BGE Embedding、FunASR、WebSocket、Redis（可选）。
 
-## 安全与配置
+## PostgreSQL 与向量检索
 
-API Key 只通过本地 `.env` 或环境变量注入，不写入源码和 Git。项目通过 `.gitignore` 排除 `.env`、本地数据库、Python 缓存和运行时文件；提交前应检查暂存区，避免把个人凭据或运行数据上传到远程仓库。
+业务表和知识向量统一存储在 PostgreSQL。Alembic 迁移会启用 `vector` 扩展、创建 `vector(512)` 向量列和 HNSW cosine 索引。知识索引重建在事务中替换旧向量；模型版本、语料指纹和文档数量保存在索引状态表中。旧的 `data/voiceshop.db` 和 SQLite 向量索引不会自动删除或迁移。
 
-项目技术栈以 Python、FastAPI、LangGraph 和 Pydantic 为基础，结合 Embedding、Vector Database 与 RAG 完成商品和知识内容的语义检索。对话流程通过 LangGraph 进行状态编排，支持意图识别、槽位提取、工具调用、上下文组装、答案生成和来源追溯；语音交互采用浏览器语音输入与语音合成，配合 Trace 记录和离线评测分析 Agent 执行效果。
+项目提供 Docker Compose 配置，PostgreSQL 数据目录绑定到仓库下的 `data/postgres/`，Docker Desktop 镜像缓存沿用其本机数据盘配置。`.env` 和 `.env.database` 均不提交到 Git。
 
-## Run
+### 本地启动数据库
 
-```bash
+已配置好本机环境时：
+
+```powershell
 cd G:\ai-agent-show\voiceshop-ai
-py -3.11 -m pip install -r requirements.txt
-py -3.11 -m app.web
+docker compose --env-file .env.database up -d
 ```
 
-Open `http://127.0.0.1:7860`.
+新环境可以参考 `.env.example` 配置本地 `.env.database`，并设置自己的 `POSTGRES_PASSWORD`。应用会先读取 `.env`，未配置的数据库变量再从 `.env.database` 读取。
 
-## Agent runtime
+### 安装 Python 依赖与迁移
 
-The runtime is implemented as a compiled LangGraph state machine. The main nodes are
-session loading, model-first intent classification, schema validation, slot extraction,
-catalog retrieval, RAG retrieval, response generation, and trace persistence. `run_agent`
-is retained as a compatibility adapter for the HTTP and evaluation entry points; it is
-not the workflow implementation.
+依赖安装到项目 G 盘虚拟环境，缓存和临时目录也设置在 G 盘：
 
-Model calls use versioned prompts under `app/prompts/`, Pydantic validation, optional
-function-calling contracts, retry-after-aware retries, primary/fallback model switching,
-and model-call records containing latency, token usage, model, prompt version, and cost.
-Intent results use a semantic cache keyed by the model, prompt context, and query. Redis
-is used when configured; local memory is available for development.
+```powershell
+cd G:\ai-agent-show\voiceshop-ai
+$env:PIP_CACHE_DIR = "G:\ai-agent-show\voiceshop-ai\.pip-cache"
+$env:TEMP = "G:\ai-agent-show\voiceshop-ai\.tmp-install"
+$env:TMP = $env:TEMP
+New-Item -ItemType Directory -Force -Path $env:TEMP | Out-Null
+& ".\.venv\python.exe" -m pip install -r requirements.txt
+& ".\.venv\python.exe" -m alembic upgrade head
+& ".\.venv\python.exe" -m app.migrate_sqlite_to_postgres
+& ".\.venv\python.exe" -m app.index_knowledge
+```
 
-## Database runtime
+`migrate_sqlite_to_postgres` 只读打开旧 `data/voiceshop.db`，将用户、会话、消息、订单、行为、FAQ 和审计记录复制到空的 PostgreSQL 表中；目标库已有业务数据时会停止，不会合并覆盖。旧 SQLite 文件保留不动。首次向量索引构建会使用 `models/embeddings/bge-small-zh-v1.5` 中的本地模型，模型文件不会提交到 Git。
 
-The service uses SQLAlchemy engines with separate read and write sessions. SQLite runs
-with WAL mode, a 30-second busy timeout, foreign-key checks, connection pooling, and
-slow-query logging. Schema changes are managed by Alembic under `alembic/versions/`;
-the web server applies migrations once during startup rather than executing DDL per
-request. Order creation writes the order and its initial order event inside one explicit
-transaction. PostgreSQL can be enabled with `DATABASE_URL` and `DATABASE_READ_URL`.
+## 运行应用
 
-## LLM configuration
+```powershell
+cd G:\ai-agent-show\voiceshop-ai
+$env:MODELSCOPE_CACHE = "G:\ai-agent-show\voiceshop-ai\models\modelscope"
+$env:HF_HOME = "G:\ai-agent-show\voiceshop-ai\models\huggingface"
+& ".\.venv\python.exe" -m app.web
+```
 
-The service uses a DeepSeek model through an OpenAI-compatible API for intent understanding and open-ended questions:
+打开 <http://127.0.0.1:7860>。语音输入首次使用时需要授予浏览器麦克风权限；识别模型在本机运行，回复语音使用浏览器语音合成。
+
+## 知识库与评测
+
+`data/knowledge/` 包含配送、售后、商品服务及导入的参考文档。文档切分结果保留来源、页码和集合信息。修改知识文档后运行 `python -m app.index_knowledge` 重建向量索引。
+
+- `data/eval_cases.json`：Agent 意图、商品筛选、多轮上下文和业务流程评测
+- `data/retrieval_threshold_eval.json`：35 条有答案/无答案 RAG 样本，并标注应命中的 chunk，用于拒答阈值分析
+
+离线运行 Agent 评测：
+
+```powershell
+$env:EVAL_OFFLINE = "1"
+& ".\.venv\python.exe" -m app.eval
+```
+
+相似度分数不是通用相关性概率。易混淆的无答案问题可能取得较高相似度，因此拒答阈值需要结合该评测集、误答代价和真实用户查询共同校准。
+
+## 项目结构
 
 ```text
-LLM_API_KEY=your_api_key
-LLM_MODEL=deepseek-chat
-OPENAI_BASE_URL=https://api.deepseek.com/v1
+app/
+├── graph.py                 # LangGraph 工作流
+├── agent_nodes.py           # 意图、检索、工具与回答节点
+├── database.py              # PostgreSQL 连接池与会话
+├── vector_store.py          # pgvector 向量存取与检索
+├── rag.py                   # 知识切分、召回与上下文组装
+├── index_knowledge.py       # 本地向量索引构建
+├── voice/                   # FunASR 流式识别
+└── prompts/                 # 版本化 Prompt
+alembic/                     # 数据库版本迁移
+data/knowledge/              # 知识文档与导入语料
+web/                         # 导购前端
+tests/                       # 自动化测试
 ```
 
-`OPENAI_API_KEY` is also supported. Do not commit keys or the local `data/voiceshop.db` file.
+## 安全说明
 
-## Conversation and FAQ
-
-The browser stores a `session_id` and sends it with each request. The backend persists
-messages and extracted slots, so a follow-up such as `预算 500 以内` can complete the
-previous request for shoes. FAQ means frequently asked questions, such as delivery,
-returns and exchanges. Those questions now enter the RAG flow: knowledge files are
-split into chunks, locally ranked, assembled as context, and optionally summarized by
-the configured DeepSeek model with a source filename.
-
-## Catalog and evaluation
-
-The demo catalog now contains 113 products. The 15 curated VoiceShop products cover
-running shoes, headphones, watches, and lipstick; 98 additional records were batch
-imported from a small external product metadata sample and kept under the `其他` category
-because their source taxonomy does not safely map to the four recommendation categories.
-Product records include category, price, stock, feature tags, scene tags, image paths,
-source metadata, and reference URLs where available. External prices are source snapshots,
-not live commerce quotes or inventory.
-
-The evaluation set is stored in `data/eval_cases.json` and covers single-turn and
-multi-turn conversations, budget filtering, category isolation, unsupported categories,
-no-match budgets, FAQ/RAG answers, and trace-node coverage. Run an offline evaluation
-without consuming model API quota:
-
-```bash
-cd G:\\ai-agent-show\\voiceshop-ai
-$env:EVAL_OFFLINE='1'
-py -3.11 -m app.eval
-```
-
-The current 10-case baseline reports slot F1 0.975, Recall@5 1.0, clarification accuracy
-1.0, category purity 1.0, and response checks 1.0. The report also prints each case's
-trace nodes so retrieval and clarification regressions can be located quickly.
+模型密钥、数据库口令和 JWT 密钥只放在本地 `.env`/`.env.database` 或环境变量中。`.env`、数据库目录、向量模型权重和本地运行数据均由 `.gitignore` 排除；推送前仍应检查 Git 暂存区。

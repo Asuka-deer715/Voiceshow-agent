@@ -7,6 +7,7 @@ class AgentState(TypedDict, total=False):
     query: str
     session_id: str
     user_id: int
+    authenticated: bool
     trace_id: str
     session: dict[str, Any]
     history: list[dict[str, Any]]

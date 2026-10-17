@@ -10,7 +10,7 @@
   },
   {
     "id": "shoe_context_budget",
-    "turns": ["我想买个鞋子", "预算1200，想要轻一点又缓震"],
+    "turns": ["我想买跑鞋", "预算1200，想要轻一点又缓震"],
     "expected_status": "answered",
     "expected_slots": {"category": "跑鞋", "budget_max": 1200, "usage_scene": null, "brand_preference": null, "must_have": ["light", "cushion"], "avoid": []},
     "expected_product_ids": [2, 8],
@@ -83,5 +83,37 @@
     "expected_product_ids": [5, 13],
     "expected_category": "耳机",
     "forbidden_categories": ["跑鞋", "手表", "口红"]
+  },
+  {
+    "id": "unsupported_casual_shoes",
+    "input": "有休闲鞋吗",
+    "expected_status": "clarify",
+    "expected_slots": {"category": null, "budget_max": null, "usage_scene": null, "brand_preference": null, "must_have": [], "avoid": []},
+    "expected_product_ids": [],
+    "expected_response_contains": "暂不支持休闲鞋"
+  },
+  {
+    "id": "unsupported_leather_shoes",
+    "input": "你们有皮鞋吗？",
+    "expected_status": "clarify",
+    "expected_slots": {"category": null, "budget_max": null, "usage_scene": null, "brand_preference": null, "must_have": [], "avoid": []},
+    "expected_product_ids": [],
+    "expected_response_contains": "暂不支持皮鞋"
+  },
+  {
+    "id": "unsupported_basketball_shoes",
+    "input": "给我推荐篮球鞋",
+    "expected_status": "clarify",
+    "expected_slots": {"category": null, "budget_max": null, "usage_scene": null, "brand_preference": null, "must_have": [], "avoid": []},
+    "expected_product_ids": [],
+    "expected_response_contains": "暂不支持篮球鞋"
+  },
+  {
+    "id": "generic_shoes_need_category",
+    "input": "我想买双鞋",
+    "expected_status": "clarify",
+    "expected_slots": {"category": null, "budget_max": null, "usage_scene": null, "brand_preference": null, "must_have": [], "avoid": []},
+    "expected_product_ids": [],
+    "expected_response_contains": "想买哪一类商品"
   }
 ]

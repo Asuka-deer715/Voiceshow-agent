@@ -3,6 +3,14 @@
 !.env.example
 data/*.db
 data/*.db-*
+data/vector_indexes/
+data/postgres/
 __pycache__/
 app/__pycache__/
 *.pyc
+.venv/
+.venv-funasr/
+.conda-pkgs/
+.pip-cache/
+.tmp-install/
+models/

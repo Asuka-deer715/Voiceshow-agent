@@ -5,6 +5,7 @@ from typing import Any
 
 from .agent_state import AgentState
 from . import db, llm, rag, tools
+from .security.guard import moderate_output, redact_pii, require_tool_permission, scan_input
 
 
 def _trace(state: AgentState, node: str, **data: Any) -> list[dict[str, Any]]:
@@ -13,10 +14,13 @@ def _trace(state: AgentState, node: str, **data: Any) -> list[dict[str, Any]]:
 
 def load_context(state: AgentState) -> AgentState:
     session_id = state["session_id"]
-    session = db.get_session(session_id)
-    db.append_message(session_id, "USER", state["query"])
+    risk = scan_input(state["query"])
+    session = db.get_session(session_id, state.get("user_id", 1))
+    db.append_message(session_id, "USER", redact_pii(state["query"]))
     history = db.recent_messages(session_id, 6)
-    return {**state, "session": session, "history": history, "trace": _trace(state, "session_load", session_id=session_id)}
+    if risk.blocked:
+        return {**state, "session": session, "history": history, "status": "blocked", "response": "抱歉，我不能执行绕过系统规则、读取其他用户数据或泄露内部提示词的请求。", "trace": _trace(state, "input_guard", reasons=list(risk.reasons), status="blocked")}
+    return {**state, "session": session, "history": history, "query": redact_pii(state["query"]), "trace": _trace(state, "session_load", session_id=session_id)}
 
 
 def classify_intent(state: AgentState) -> AgentState:
@@ -58,6 +62,8 @@ def validate_intent(state: AgentState) -> AgentState:
 def extract_slots(state: AgentState) -> AgentState:
     from . import graph as logic
 
+    if state["intent"] in {"knowledge_query", "after_sales_query", "logistics_query"}:
+        return {**state, "slots": state["session"].get("slots", {}), "trace": _trace(state, "slot_extraction", status="not_required_for_knowledge")}
     model_slots = logic.slots_from_model(state.get("model_intent")) if state.get("intent_engine") == "llm" else logic.empty_slots()
     current = logic.merge_slots(logic.extract_slots(state["query"]), model_slots)
     previous = state["session"].get("slots", {})
@@ -95,7 +101,7 @@ def generate_response(state: AgentState) -> AgentState:
     slots = state.get("slots", {})
     recommendations = state.get("recommendations", [])
     if state.get("response"):
-        return state
+        return {**state, "response": moderate_output(state["response"])}
     if intent in {"knowledge_query", "after_sales_query", "logistics_query"}:
         context = rag.assemble_context(state.get("retrieved", []))
         response = llm.generate_answer(state["query"], context, state["trace_id"]) if context else None
@@ -107,6 +113,7 @@ def generate_response(state: AgentState) -> AgentState:
         response = "你好，我是 VoiceShop AI 导购。你可以告诉我想买什么、预算多少，也可以查询商品、订单和售后信息。"
         return {**state, "response": response, "status": "clarify", "phase": "INTENT", "trace": _trace(state, "greeting")}
     if intent == "order_history_query":
+        require_tool_permission(state.get("user_id", 1), state.get("authenticated", False), "list_order_history")
         orders = tools.list_order_history(state["user_id"])
         response = "目前还没有查询到你的历史订单。" if not orders else "你过往的下单商品如下：" + "、".join(item["product_name"] for item in orders[:5])
         return {**state, "response": response, "status": "answered", "phase": "ORDER", "trace": _trace(state, "order_history_tool", order_count=len(orders))}
@@ -131,7 +138,7 @@ def generate_response(state: AgentState) -> AgentState:
         response = f"为你推荐 {top['name']}，价格 {top['price']} 元，匹配你的预算和使用偏好。"
     else:
         response = "暂时没有完全匹配的商品，可以放宽预算或调整偏好。"
-    return {**state, "response": response, "status": "answered", "phase": "RECOMMEND", "trace": _trace(state, "recommendation_generation", top_ids=[item["id"] for item in recommendations])}
+    return {**state, "response": moderate_output(response), "status": "answered", "phase": "RECOMMEND", "trace": _trace(state, "recommendation_generation", top_ids=[item["id"] for item in recommendations])}
 
 
 def persist_result(state: AgentState) -> AgentState:
