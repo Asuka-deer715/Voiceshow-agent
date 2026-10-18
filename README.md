@@ -2,118 +2,102 @@
 
 [简体中文](README.md) | [English](README_EN.md)
 
-基于 Python、LangGraph、DeepSeek 和本地语音识别构建的智能导购系统。用户可以通过文字或语音表达购物需求，系统结合多轮上下文、商品目录、知识检索和业务工具完成商品推荐、售后问答及订单服务。
+VoiceShop AI 是面向在线购物场景的智能语音导购系统。用户无需先熟悉商品分类和筛选项，可以直接用自然语言描述需求；系统结合连续对话、商品检索与知识问答，协助用户从模糊需求逐步收敛到合适的商品与服务信息。
+
+## 项目背景
+
+传统电商搜索通常要求用户先选定类目，再填写价格、品牌或属性条件。当用户只知道“想买一双日常通勤、轻一点的鞋”，或在对话中不断补充预算、用途、排除项时，固定筛选器难以表达真实意图；售后、配送等问题又常常需要离开商品页面另行查找。
+
+VoiceShop AI 将对话式需求理解、商品发现、知识检索和语音交互整合到同一购物流程中。重点不只是生成一段推荐文案，而是让需求条件能在多轮对话中持续更新，并约束后续检索、工具执行和回答。
 
 ## 页面展示
+
+下图展示 VoiceShop AI 的商品目录与导购对话界面。
 
 ![VoiceShop AI 商品目录与对话界面](docs/images/voiceshop-dialogue.png)
 
 ## 核心能力
 
-- LangGraph 状态图编排多轮对话、模型意图识别、规则槽位抽取、澄清与工具执行
-- 商品目录、商品详情、预算过滤、推荐理由、浏览行为及订单记录
-- 基于 BGE-small-zh-v1.5 的中文文本向量化和语义检索，答案关联原始来源
-- PostgreSQL 持久化业务数据，pgvector 存储 512 维向量并使用 HNSW 做余弦距离检索
-- FunASR Paraformer Streaming 流式语音识别，浏览器语音合成回复
-- 模型调用 Trace、token/延迟/成本记录、版本化 Prompt、输入输出安全检查
-- 离线对话评测与独立 RAG 拒答阈值评测集
+### 多轮意图理解与上下文管理
 
-## 对话流程
+由模型结合当前输入和已有对话理解用户此刻的主要意图；规则层提取品类、预算、品牌、用途和否定偏好等明确槽位，并通过结构化结果与业务校验约束后续动作。用户先提出品类、再补充预算或改变偏好时，系统将新信息合并、覆盖或清除对应条件，而不是把每句话当作彼此无关的新请求。
+
+当品类、预算或用途等关键信息不足时，优先发起针对性澄清；当用户询问商品目录、历史订单或售后政策时，则切换到相应查询路径，避免把所有输入误判为商品推荐。
+
+### 约束驱动的商品检索与推荐
+
+商品推荐从用户当前意图和有效条件出发，综合商品类别、预算、使用场景、属性、库存与偏好筛选候选项。推荐理由结合商品特点和用户需求说明匹配原因，而不把“有库存”当作唯一理由。
+
+候选商品经过业务条件复核后再展示：明确的品类和价格约束优先于宽泛的语义相似度；如果目录中没有符合条件的商品，系统明确说明无匹配结果，并提供调整预算或条件的选择，不用其他品类商品替代。
+
+### RAG 知识问答与来源追溯
+
+面向商品服务说明、配送信息和售后规则等问题，RAG 流程将知识文档解析并切分为带有来源信息的内容片段，通过 Embedding 与向量检索召回相关证据，再将证据组织进回答上下文。
+
+回答围绕已检索到的资料生成，并展示或保留来源；当召回内容不足以支持结论时，走无答案或补充澄清路径，而不是把模型猜测包装成平台规则。检索质量通过有答案与无答案样例共同评估，辅助分析召回效果和拒答边界。
+
+### 语音交互与连续购物体验
+
+语音输入与文字输入进入统一的意图理解和业务处理流程。流式识别过程中可呈现当前识别状态；识别结束后，用户仍可编辑文本再提交。系统可将回答转换为语音播放，并支持在同一会话里继续追问、查看商品详情、修正条件及访问后续服务。
+
+### Agent 流程、观测与可靠性
+
+LangGraph 将意图识别、槽位更新、澄清、商品或知识检索、工具执行、回答生成和结果校验组织为显式状态流转。节点状态可用于呈现 Agent 当前正在执行的阶段；Trace 记录模型调用、工具调用、耗时与结果，便于定位错误发生在理解、检索、业务校验还是生成环节。
+
+模型输出通过结构化格式和字段校验后进入业务流程；工具执行前再次校验参数与操作边界。针对模型超时、限流、结构化结果无效、检索无依据和工具失败等情况，流程提供重试、模型降级、澄清或明确失败回复等处理方式。
+
+## 核心交互流程
 
 ```text
-语音或文字输入
-  -> 加载会话上下文
-  -> 模型判断主要意图 + 规则抽取槽位
-  -> 结构化校验与业务约束
-  -> 商品检索 / pgvector 知识检索 / 订单工具
-  -> 证据约束回答与来源引用
-  -> 保存消息、行为、模型调用与 Trace
+语音 / 文字输入
+        ↓
+加载会话上下文，识别当前主要意图
+        ↓
+抽取并更新商品条件，校验结构化结果
+        ├── 信息不足：生成澄清问题，等待用户补充
+        ├── 商品需求：检索候选商品 → 业务过滤 → 推荐与理由
+        ├── 知识问题：向量检索 → 证据组装 → 带来源回答
+        └── 其他业务：选择对应工具 → 权限与参数校验 → 返回结果
+        ↓
+结果检查、会话记录与 Trace 观测
+        ↓
+用户继续追问、修改偏好或进入下一项服务
 ```
+
+## 技术架构
+
+| 层次 | 主要职责 | 关键技术 |
+| --- | --- | --- |
+| 交互层 | 商品目录、导购对话、语音输入与语音回复 | HTML、CSS、JavaScript、WebSocket、FunASR |
+| Agent 编排层 | 多轮状态管理、节点路由、澄清与工具调用 | Python、LangGraph |
+| 模型层 | 意图理解、上下文推理、回答生成与降级调用 | DeepSeek API、结构化输出、Pydantic |
+| 检索层 | 商品候选召回、知识切分、语义检索与证据组装 | RAG、BGE Embedding、pgvector |
+| 数据层 | 会话、消息、商品、订单、知识片段与调用记录 | PostgreSQL、SQLAlchemy、Redis |
+| 质量与安全层 | 输出校验、权限复核、Trace、回归及安全场景评测 | JSON Schema、离线评测、Langfuse / LangSmith |
+
+## 关键设计
+
+- **模型理解，业务约束执行：**大模型负责处理口语化表达和上下文，规则负责抽取确定性条件；业务校验确保模型理解不会直接越过商品目录、用户权限或工具参数边界。
+- **保留用户最新意图：**对预算、品类、偏好和排除条件进行增量更新；明确的纠正和否定表达优先于旧状态，避免用户改变主意后仍沿用旧推荐条件。
+- **无依据时不强答：**商品筛选和知识问答分别校验结果依据；无匹配商品或无相关知识时明确告知，并提供澄清或调整路径。
+- **可观测、可评估：**对模型、检索、工具和最终回答分层记录 Trace，并使用覆盖正常请求、边界条件、无答案和工具异常的场景集做回归检查。
 
 ## 技术栈
 
-Python、LangGraph、SQLAlchemy、Alembic、PostgreSQL、pgvector、Pydantic、DeepSeek API、BGE Embedding、FunASR、WebSocket、Redis（可选）。
+| 模块 | 技术 | 应用方向 |
+| --- | --- | --- |
+| 服务端与流程编排 | Python、FastAPI、LangGraph | API 服务、多轮对话状态及 Agent 工作流 |
+| 大模型与输出校验 | DeepSeek API、Pydantic、JSON Schema、Function Calling | 意图理解、结构化结果、工具选择与参数约束 |
+| RAG 与向量检索 | LangChain、BGE Embedding、PostgreSQL、pgvector | 文档处理、语义召回、证据组装与来源追溯 |
+| 持久化与缓存 | SQLAlchemy、PostgreSQL、Redis | 会话与业务数据、向量索引及缓存能力 |
+| 语音交互 | FunASR、WebSocket、浏览器语音合成 | 流式语音识别与语音回复 |
+| 质量与观测 | Langfuse / LangSmith、Trace、离线评测 | 调用链观测、失败定位与版本回归 |
 
-## PostgreSQL 与向量检索
+## 质量评估方向
 
-业务表和知识向量统一存储在 PostgreSQL。Alembic 迁移会启用 `vector` 扩展、创建 `vector(512)` 向量列和 HNSW cosine 索引。知识索引重建在事务中替换旧向量；模型版本、语料指纹和文档数量保存在索引状态表中。旧的 `data/voiceshop.db` 和 SQLite 向量索引不会自动删除或迁移。
+评测围绕用户能否完成购物任务展开，而不只看模型回答是否流畅：
 
-项目提供 Docker Compose 配置，PostgreSQL 数据目录绑定到仓库下的 `data/postgres/`，Docker Desktop 镜像缓存沿用其本机数据盘配置。`.env` 和 `.env.database` 均不提交到 Git。
-
-### 本地启动数据库
-
-已配置好本机环境时：
-
-```powershell
-cd G:\ai-agent-show\voiceshop-ai
-docker compose --env-file .env.database up -d
-```
-
-新环境可以参考 `.env.example` 配置本地 `.env.database`，并设置自己的 `POSTGRES_PASSWORD`。应用会先读取 `.env`，未配置的数据库变量再从 `.env.database` 读取。
-
-### 安装 Python 依赖与迁移
-
-依赖安装到项目 G 盘虚拟环境，缓存和临时目录也设置在 G 盘：
-
-```powershell
-cd G:\ai-agent-show\voiceshop-ai
-$env:PIP_CACHE_DIR = "G:\ai-agent-show\voiceshop-ai\.pip-cache"
-$env:TEMP = "G:\ai-agent-show\voiceshop-ai\.tmp-install"
-$env:TMP = $env:TEMP
-New-Item -ItemType Directory -Force -Path $env:TEMP | Out-Null
-& ".\.venv\python.exe" -m pip install -r requirements.txt
-& ".\.venv\python.exe" -m alembic upgrade head
-& ".\.venv\python.exe" -m app.migrate_sqlite_to_postgres
-& ".\.venv\python.exe" -m app.index_knowledge
-```
-
-`migrate_sqlite_to_postgres` 只读打开旧 `data/voiceshop.db`，将用户、会话、消息、订单、行为、FAQ 和审计记录复制到空的 PostgreSQL 表中；目标库已有业务数据时会停止，不会合并覆盖。旧 SQLite 文件保留不动。首次向量索引构建会使用 `models/embeddings/bge-small-zh-v1.5` 中的本地模型，模型文件不会提交到 Git。
-
-## 运行应用
-
-```powershell
-cd G:\ai-agent-show\voiceshop-ai
-$env:MODELSCOPE_CACHE = "G:\ai-agent-show\voiceshop-ai\models\modelscope"
-$env:HF_HOME = "G:\ai-agent-show\voiceshop-ai\models\huggingface"
-& ".\.venv\python.exe" -m app.web
-```
-
-打开 <http://127.0.0.1:7860>。语音输入首次使用时需要授予浏览器麦克风权限；识别模型在本机运行，回复语音使用浏览器语音合成。
-
-## 知识库与评测
-
-`data/knowledge/` 包含配送、售后、商品服务及导入的参考文档。文档切分结果保留来源、页码和集合信息。修改知识文档后运行 `python -m app.index_knowledge` 重建向量索引。
-
-- `data/eval_cases.json`：Agent 意图、商品筛选、多轮上下文和业务流程评测
-- `data/retrieval_threshold_eval.json`：35 条有答案/无答案 RAG 样本，并标注应命中的 chunk，用于拒答阈值分析
-
-离线运行 Agent 评测：
-
-```powershell
-$env:EVAL_OFFLINE = "1"
-& ".\.venv\python.exe" -m app.eval
-```
-
-相似度分数不是通用相关性概率。易混淆的无答案问题可能取得较高相似度，因此拒答阈值需要结合该评测集、误答代价和真实用户查询共同校准。
-
-## 项目结构
-
-```text
-app/
-├── graph.py                 # LangGraph 工作流
-├── agent_nodes.py           # 意图、检索、工具与回答节点
-├── database.py              # PostgreSQL 连接池与会话
-├── vector_store.py          # pgvector 向量存取与检索
-├── rag.py                   # 知识切分、召回与上下文组装
-├── index_knowledge.py       # 本地向量索引构建
-├── voice/                   # FunASR 流式识别
-└── prompts/                 # 版本化 Prompt
-alembic/                     # 数据库版本迁移
-data/knowledge/              # 知识文档与导入语料
-web/                         # 导购前端
-tests/                       # 自动化测试
-```
-
-## 安全说明
-
-模型密钥、数据库口令和 JWT 密钥只放在本地 `.env`/`.env.database` 或环境变量中。`.env`、数据库目录、向量模型权重和本地运行数据均由 `.gitignore` 排除；推送前仍应检查 Git 暂存区。
+- **意图理解：**检查品类识别、查询类型判断、否定表达、意图切换及多轮上下文承接。
+- **商品推荐：**检查品类准确率、预算约束满足、排除条件遵循、推荐理由与无匹配时的拒答行为。
+- **知识问答：**检查检索命中、答案正确性、来源覆盖和无答案问题的拒答准确性。
+- **Agent 执行：**检查工具选择与参数、业务校验、异常兜底、端到端任务完成及调用耗时。
